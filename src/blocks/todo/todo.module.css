@@ -21,7 +21,8 @@
 .box path { stroke-dasharray: 16; stroke-dashoffset: 16; transition: stroke-dashoffset var(--v-dur-3) var(--v-ease); }
 .box[aria-checked="true"] path { stroke-dashoffset: 0; }
 @media (pointer: coarse) {
-  .box { position: relative; }
+  /* Above the next block, so its edge never takes a tap meant for this 46px area. */
+  .box { position: relative; z-index: 1; }
   .box::before { content: ""; position: absolute; inset: -14px; }
 }
 :global([data-readonly]) .box { pointer-events: none; }

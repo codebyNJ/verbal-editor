@@ -8,7 +8,10 @@ async function allPages(page) {
   await page.getByRole('navigation', { name: 'Sections' }).getByRole('link').first().waitFor();
   const hrefs = [];
   for (const tab of await page.getByRole('navigation', { name: 'Sections' }).getByRole('link').allTextContents()) {
-    await page.getByRole('navigation', { name: 'Sections' }).getByRole('link', { name: tab }).click();
+    const link = page.getByRole('navigation', { name: 'Sections' }).getByRole('link', { name: tab, exact: true });
+    await link.click();
+    // The sidebar follows the route: read it once the tab is current, not while the old section still shows.
+    await expect(link).toHaveAttribute('aria-current', 'page');
     hrefs.push(...(await nav(page).locator('a').evaluateAll((as) => as.map((a) => a.getAttribute('href')))));
   }
   return hrefs.map((h) => h.slice('#/docs/'.length));
@@ -83,9 +86,12 @@ test('llms.txt lists every docs page, llms-full.txt carries each one, and AGENTS
 test('⌘K finds a heading on any page and goes straight to it', async ({ page }) => {
   await page.goto('/#/docs/introduction');
   await expect(page.locator('h1')).toHaveText('Introduction');
-  await page.keyboard.press('ControlOrMeta+k');
   const dialog = page.getByRole('dialog', { name: 'Search the docs' });
-  await expect(dialog).toBeVisible();
+  // The shortcut is heard once the page's listener attaches, just after first paint; a key sent in that instant is lost.
+  await expect(async () => {
+    await page.keyboard.press('ControlOrMeta+k');
+    await expect(dialog).toBeVisible({ timeout: 500 });
+  }).toPass();
   await page.keyboard.type('history undo');
   await expect(dialog.getByRole('option').first()).toContainText('History');
   await page.keyboard.press('Enter');

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { review } from '@verbal/editor/preset';
 import { mount } from '@verbal/editor/dom';
 import { Blocks, useEditor } from '@verbal/editor/react';
@@ -69,7 +69,8 @@ function Palette({ open, onClose, commands }) {
 function Page({ page }) {
   const doc = useMemo(() => page.doc ?? toDoc(page.md), [page]);
   const editor = useEditor({ ...(page.bare ? {} : modules), doc, onRender });
-  useEffect(() => {
+  // Before paint, so a script (or a test) that sees the content also sees the editor.
+  useLayoutEffect(() => {
     window.editor = editor;
     window.__renders = 0;
     window.__renderIds = [];

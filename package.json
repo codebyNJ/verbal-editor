@@ -4,6 +4,7 @@
   "description": "Notion-style block editor with zero runtime dependencies and zero React re-renders while typing.",
   "type": "module",
   "license": "MIT",
+  "homepage": "https://verbal-editor.vercel.app",
   "exports": {
     ".": { "types": "./dist/types/index.d.ts", "default": "./dist/index.js" },
     "./preset": { "types": "./dist/types/preset.d.ts", "default": "./dist/preset.js" },

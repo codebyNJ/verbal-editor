@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Blocks, useEditor } from '@verbal/editor/react';
 import site from 'virtual:content';
 import logo from './assets/logo.svg';
@@ -123,8 +123,9 @@ function Body({ page, onHeadings }) {
   const doc = useMemo(() => toDoc(page.md), [page]);
   const editor = useEditor({ blocks: modules.blocks, marks: modules.marks, doc, editable: false });
   const ref = useRef(null);
+  // Before paint, so a script (or a test) that sees the content also sees the editor.
+  useLayoutEffect(() => void (window.editor = editor), [editor]);
   useEffect(() => {
-    window.editor = editor;
     const seen = {};
     const list = [...ref.current.querySelectorAll('[data-type="heading"]')].flatMap((host) => {
       const h = host.querySelector('h2, h3');

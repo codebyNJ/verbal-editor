@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { caret } from '@verbal/editor';
 import preset from '@verbal/editor/preset';
 import { Blocks, useEditor } from '@verbal/editor/react';
@@ -133,10 +133,13 @@ function LiveEditor() {
   const [renders, setRenders] = useState(0);
   const [stage, setStage] = useState('waiting');
 
-  useEffect(() => {
+  // Before paint, so a script (or a test) that sees the content also sees the editor.
+  useLayoutEffect(() => {
     window.editor = editor;
     window.__renders = 0;
     window.__renderIds = [];
+  }, [editor]);
+  useEffect(() => {
     let raf;
     const tick = () => (setRenders(window.__renders), (raf = requestAnimationFrame(tick)));
     tick();

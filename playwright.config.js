@@ -33,7 +33,8 @@ export const test = base.extend({
   page: async ({ page }, use) => {
     const errors = [];
     const foreign = [];
-    page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+    // Linux WebKit reports the viewport's interactive-widget key (for Android keyboards) as an error; Safari ignores it quietly.
+    page.on('console', (m) => m.type() === 'error' && !/^Viewport argument key "interactive-widget"/.test(m.text()) && errors.push(m.text()));
     page.on('pageerror', (e) => errors.push(e.message));
     page.on('request', (r) => /^https?:/.test(r.url()) && !r.url().startsWith(baseURL) && foreign.push(r.url()));
     await use(page);

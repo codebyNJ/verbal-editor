@@ -19,6 +19,8 @@
 .brand { display: flex; align-items: center; gap: 8px; color: var(--v-fg); font-size: 16px; text-decoration: none; }
 .brand img { image-rendering: pixelated; }
 .section {
+  display: inline-flex;
+  align-items: center;
   padding: 2px 8px;
   border-radius: 999px;
   background: var(--v-accent-soft);
@@ -287,7 +289,10 @@
 
 @media (pointer: coarse) {
   .ghost, .menuButton, .find, .cta, .copyPage, .more { min-width: 44px; min-height: 44px; }
-  .brand, .section { min-height: 44px; display: flex; align-items: center; }
+  .tabs a { min-width: 44px; justify-content: center; }
+  /* No display here: the phone rule above hides the section label, and this must not bring it back. */
+  .brand, .section { min-height: 44px; }
+  .section { min-width: 44px; justify-content: center; }
   .nav a, .outline a, .onPage a, .footer a { display: flex; align-items: center; min-height: 44px; box-sizing: border-box; }
   .footer a { min-width: 44px; }
 }

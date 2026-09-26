@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import preset from '@verbal/editor/preset';
 import { Blocks, useEditor } from '@verbal/editor/react';
 import sizes from 'virtual:sizes';
@@ -59,7 +59,8 @@ function Frame({ on, doc, onEditor }) {
     return { blocks: pick('blocks'), marks: pick('marks'), ui: pick('ui') };
   }, [on]);
   const editor = useEditor({ ...options, doc, onRender });
-  useEffect(() => {
+  // Before paint, so a script (or a test) that sees the content also sees the editor.
+  useLayoutEffect(() => {
     window.editor = editor;
     window.__renders = 0;
     window.__renderIds = [];

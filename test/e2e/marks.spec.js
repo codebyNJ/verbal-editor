@@ -58,10 +58,18 @@ test('F-42: toolbar appears on release, stays inside the viewport, reflects and 
   await page.setViewportSize({ width: 390, height: 700 });
   await fresh(page, 'Select the very last word of this line please');
   const bar = page.getByRole('toolbar', { name: 'Formatting' });
-  const box = await page.locator('[data-block="x"] [data-content]').boundingBox();
-  await page.mouse.move(box.x + box.width - 4, box.y + box.height - 8);
+  // Drag across the last word where it actually lands, so the line's wrap (which follows the fonts) doesn't matter.
+  const word = await page.locator('[data-block="x"] [data-content]').evaluate((el) => {
+    const text = [...el.childNodes].findLast((n) => n.nodeType === 3);
+    const r = document.createRange();
+    r.setStart(text, text.data.lastIndexOf(' ') + 1);
+    r.setEnd(text, text.data.length);
+    const { left, right, top, height } = r.getBoundingClientRect();
+    return { left, right, y: top + height / 2 };
+  });
+  await page.mouse.move(word.right - 1, word.y);
   await page.mouse.down();
-  await page.mouse.move(box.x + box.width - 70, box.y + box.height - 8, { steps: 4 });
+  await page.mouse.move(word.left + 1, word.y, { steps: 4 });
   await expect(bar).toBeHidden();
   await page.mouse.up();
   await expect(bar).toBeVisible();
