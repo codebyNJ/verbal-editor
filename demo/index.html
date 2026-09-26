@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+    <title>Verbal — a quiet block editor</title>
+    <meta name="description" content="A block editor for the web: Notion-style blocks, zero runtime dependencies, and no React renders while you type." />
+    <meta name="theme-color" content="#0f1014" />
+    <meta property="og:title" content="Verbal — a quiet block editor" />
+    <meta property="og:description" content="A block editor for the web: Notion-style blocks, zero runtime dependencies, and no React renders while you type." />
+    <meta property="og:image" content="./assets/og.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="./assets/og.jpg" />
+    <link rel="icon" type="image/svg+xml" href="./assets/logo.svg" />
+    <script>
+      // The saved theme applies before the first paint, so a light page never flashes dark.
+      try {
+        const theme = localStorage.getItem('verbal:theme');
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+      } catch {}
+      // The landing's display face and hero art start with the HTML, and only on the landing.
+      if (!/^#\/./.test(location.hash))
+        document.head.insertAdjacentHTML('beforeend', '<link rel="preload" as="font" type="font/woff2" href="./fonts/league-gothic-latin.woff2" crossorigin><link rel="preload" as="image" href="./landing/writer.png" fetchpriority="high">');
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./main.jsx"></script>
+  </body>
+</html>

@@ -1,0 +1,67 @@
+.table { margin: 10px 0; }
+.table > [data-children] {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--cols);
+  overflow-x: auto;
+  padding: 0;
+  border-top: 1px solid var(--v-border);
+  border-left: 1px solid var(--v-border);
+}
+.table > [data-children] > [data-block] { margin: 0; border-radius: 0; border-right: 1px solid var(--v-border); border-bottom: 1px solid var(--v-border); }
+.table > [data-children] > [data-block] > [data-content] { padding: 6px 9px; min-height: 1.6em; }
+.table[data-header="true"] > [data-children]::before {
+  content: "";
+  position: absolute;
+  grid-row: 1;
+  grid-column: 1 / -1;
+  inset: 0;
+  background: var(--v-bg-soft);
+}
+.tools { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.tools > [role="toolbar"] {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--v-radius);
+  background: var(--v-bg-raised);
+  box-shadow: var(--v-shadow);
+  opacity: 0;
+  translate: 0 4px;
+  transition: opacity var(--v-dur-1) var(--v-ease), translate var(--v-dur-2) var(--v-spring);
+}
+.table:focus-within .tools > [role="toolbar"] { opacity: 1; translate: 0; pointer-events: auto; }
+.tools button {
+  padding: 2px 7px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--v-fg-muted);
+  font: 12px var(--v-font);
+  cursor: pointer;
+}
+.tools button:hover { background: var(--v-hover); color: var(--v-fg); }
+.tools > div:last-child { display: grid; grid-template-columns: var(--cols); height: 100%; }
+.tools i { position: relative; }
+.tools i::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -3px;
+  width: 6px;
+  cursor: col-resize;
+  pointer-events: auto;
+  touch-action: none;
+  transition: background var(--v-dur-1) var(--v-ease);
+}
+.tools i:hover::after { background: var(--v-accent-soft); }
+@media (pointer: coarse) {
+  .tools button { min-width: 44px; min-height: 44px; }
+  .tools i::after { right: -12px; width: 24px; }
+}
+:global([data-readonly]) .tools { display: none; }

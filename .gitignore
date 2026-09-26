@@ -1,0 +1,11 @@
+# Installed and built output: npm ci, npm run build and npm run site recreate these.
+node_modules/
+dist/
+site-dist/
+# Tool output.
+.playwright-mcp/
+test-results/
+playwright-report/
+.vercel/
+*.log
+.DS_Store

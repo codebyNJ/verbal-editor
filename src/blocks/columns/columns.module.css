@@ -1,0 +1,14 @@
+.columns { margin: 6px 0; }
+.columns > [data-children] {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 28px;
+  padding-left: 0;
+}
+.column { min-height: 2.2em; }
+.column > [data-children] { padding-left: 0; }
+.column:not(:has([data-block])) { outline: 1px dashed var(--v-border); outline-offset: -1px; cursor: text; }
+@container (max-width: 640px) {
+  .columns > [data-children] { grid-auto-flow: row; gap: 8px; }
+}

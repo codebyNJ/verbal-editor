@@ -1,0 +1,18 @@
+.list > [data-content] { padding-left: 1.6em; }
+.list::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 3px;
+  width: 1.6em;
+  text-align: center;
+  color: var(--v-fg-muted);
+}
+.list .list::before { content: "◦"; }
+.list .list .list::before { content: "‣"; }
+.list > [data-children] { counter-reset: v-list; }
+.list[data-ordered="true"] { counter-increment: v-list; }
+.list[data-ordered="true"]:first-child,
+:not(.list[data-ordered="true"]) + .list[data-ordered="true"] { counter-set: v-list 1; }
+.list[data-ordered="true"]::before { content: counter(v-list) "."; font-variant-numeric: tabular-nums; }
+.list[data-ordered="true"] .list[data-ordered="true"]::before { content: counter(v-list, lower-alpha) "."; }

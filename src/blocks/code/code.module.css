@@ -1,0 +1,39 @@
+.code { margin: 6px 0; border-radius: var(--v-radius-lg); background: var(--v-code-bg); }
+.bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 10px 0;
+  opacity: 0;
+  transition: opacity var(--v-dur-1) var(--v-ease);
+}
+.code:hover .bar, .code:focus-within .bar { opacity: 1; }
+.bar select, .bar button {
+  padding: 2px 6px;
+  border: 0;
+  border-radius: var(--v-radius);
+  background: none;
+  color: var(--v-fg-muted);
+  font: 12px var(--v-font);
+  cursor: pointer;
+}
+.bar select:hover, .bar button:hover { background: var(--v-hover); color: var(--v-fg); }
+.code pre {
+  margin: 0;
+  padding: 4px 16px 14px;
+  overflow-x: auto;
+  white-space: pre;
+  tab-size: 2;
+  font: 13.5px / 1.6 var(--v-font-mono);
+}
+::highlight(verbal-keyword) { color: var(--v-syn-keyword); }
+::highlight(verbal-string) { color: var(--v-syn-string); }
+::highlight(verbal-comment) { color: var(--v-syn-comment); }
+::highlight(verbal-number) { color: var(--v-syn-number); }
+::highlight(verbal-function) { color: var(--v-syn-function); }
+::highlight(verbal-type) { color: var(--v-syn-type); }
+::highlight(verbal-tag) { color: var(--v-syn-tag); }
+::highlight(verbal-attr) { color: var(--v-syn-number); }
+@media (hover: none) { .bar { opacity: 1; } }
+@media (pointer: coarse) { .bar select, .bar button { min-height: 44px; font-size: 16px; } }
+/* Read-only: the language is a label, Copy stays. */
+:global([data-readonly]) .bar select { appearance: none; pointer-events: none; }

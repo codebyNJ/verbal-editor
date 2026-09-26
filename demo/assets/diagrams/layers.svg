@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 332" font-family="var(--v-font)">
+  <g style="fill: var(--v-bg-soft); stroke: var(--v-border)">
+    <rect x="1" y="1" width="398" height="64" rx="12"/>
+    <rect x="1" y="89" width="398" height="64" rx="12"/>
+    <rect x="1" y="177" width="398" height="64" rx="12"/>
+    <rect x="1" y="265" width="398" height="64" rx="12"/>
+  </g>
+  <g style="fill: var(--v-fg)" font-size="17" font-weight="600">
+    <text x="20" y="29">View</text>
+    <text x="20" y="117">Binding</text>
+    <text x="20" y="205">Editor</text>
+    <text x="20" y="293">Model</text>
+  </g>
+  <g style="fill: var(--v-fg-muted)" font-size="14">
+    <text x="20" y="50">One contenteditable per block</text>
+    <text x="20" y="138">One host per block, its own version</text>
+    <text x="20" y="226">Intent in, transactions out</text>
+    <text x="20" y="314">Flat blocks, invertible operations</text>
+  </g>
+  <g style="stroke: var(--v-accent); fill: none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M360 67v20M360 155v20M360 243v20"/>
+    <path d="M354 80l6 7 6-7M354 168l6 7 6-7M354 256l6 7 6-7"/>
+  </g>
+</svg>

@@ -1,0 +1,27 @@
+.todo > div { display: flex; align-items: flex-start; }
+.todo [data-content] { flex: 1; transition: color var(--v-dur-2) var(--v-ease); }
+.todo:has(> div > [aria-checked="true"]) > div > [data-content] { color: var(--v-fg-muted); text-decoration: line-through; text-decoration-color: var(--v-fg-faint); }
+.box {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin: calc(.8em - 6px) 8px 0 3px;
+  padding: 0;
+  border: 1.5px solid var(--v-fg-muted);
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+  transition: background var(--v-dur-1) var(--v-ease), border-color var(--v-dur-1) var(--v-ease), transform var(--v-dur-2) var(--v-spring);
+}
+.box:active { transform: scale(.86); }
+.box[aria-checked="true"] { background: var(--v-accent); border-color: var(--v-accent); }
+.box svg { width: 14px; height: 14px; fill: none; stroke: var(--v-accent-fg); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.box path { stroke-dasharray: 16; stroke-dashoffset: 16; transition: stroke-dashoffset var(--v-dur-3) var(--v-ease); }
+.box[aria-checked="true"] path { stroke-dashoffset: 0; }
+@media (pointer: coarse) {
+  .box { position: relative; }
+  .box::before { content: ""; position: absolute; inset: -14px; }
+}
+:global([data-readonly]) .box { pointer-events: none; }

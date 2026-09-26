@@ -1,0 +1,414 @@
+{
+  "date": "2026-09-26",
+  "command": "npm run build && cd bench && npm ci && npm run bench",
+  "environment": {
+    "chromium": "153.0.8010.12",
+    "node": "v22.23.1",
+    "os": "darwin 25.6.0",
+    "cpu": "Apple M5"
+  },
+  "method": {
+    "blocks": 1000,
+    "mountRuns": 5,
+    "typingRuns": 3,
+    "keystrokes": 100,
+    "keyDelayMs": 25
+  },
+  "editors": [
+    {
+      "editor": "blocknote",
+      "setup": "full",
+      "packages": [
+        {
+          "name": "@blocknote/core",
+          "version": "0.55.0"
+        },
+        {
+          "name": "@blocknote/react",
+          "version": "0.55.0"
+        },
+        {
+          "name": "@blocknote/mantine",
+          "version": "0.55.0"
+        },
+        {
+          "name": "@mantine/core",
+          "version": "9.6.2"
+        },
+        {
+          "name": "@mantine/hooks",
+          "version": "9.6.2"
+        }
+      ],
+      "js": 279567,
+      "css": 37668,
+      "total": 317235,
+      "mountMs": 97,
+      "keyP95Ms": 17.6,
+      "inputP95Ms": 1.9
+    },
+    {
+      "editor": "blocknote",
+      "setup": "minimal",
+      "packages": [
+        {
+          "name": "@blocknote/core",
+          "version": "0.55.0"
+        }
+      ],
+      "js": 180378,
+      "css": 5082,
+      "total": 185460,
+      "mountMs": 64.3,
+      "keyP95Ms": 18.1,
+      "inputP95Ms": 1.8
+    },
+    {
+      "editor": "editorjs",
+      "setup": "full",
+      "packages": [
+        {
+          "name": "@editorjs/editorjs",
+          "version": "2.31.7"
+        },
+        {
+          "name": "@editorjs/header",
+          "version": "2.8.9"
+        },
+        {
+          "name": "@editorjs/list",
+          "version": "2.0.9"
+        },
+        {
+          "name": "@editorjs/quote",
+          "version": "2.7.6"
+        },
+        {
+          "name": "@editorjs/code",
+          "version": "2.9.4"
+        },
+        {
+          "name": "@editorjs/table",
+          "version": "2.4.6"
+        },
+        {
+          "name": "@editorjs/simple-image",
+          "version": "1.6.0"
+        },
+        {
+          "name": "@editorjs/embed",
+          "version": "2.8.0"
+        },
+        {
+          "name": "@editorjs/delimiter",
+          "version": "1.4.2"
+        },
+        {
+          "name": "@editorjs/inline-code",
+          "version": "1.5.2"
+        }
+      ],
+      "js": 97323,
+      "css": 0,
+      "total": 97323,
+      "mountMs": 86.2,
+      "keyP95Ms": 16.8,
+      "inputP95Ms": 1.3
+    },
+    {
+      "editor": "editorjs",
+      "setup": "minimal",
+      "packages": [
+        {
+          "name": "@editorjs/editorjs",
+          "version": "2.31.7"
+        }
+      ],
+      "js": 64584,
+      "css": 0,
+      "total": 64584,
+      "mountMs": 87.3,
+      "keyP95Ms": 17.3,
+      "inputP95Ms": 1.4
+    },
+    {
+      "editor": "lexical",
+      "setup": "full",
+      "packages": [
+        {
+          "name": "lexical",
+          "version": "0.51.0"
+        },
+        {
+          "name": "@lexical/rich-text",
+          "version": "0.51.0"
+        },
+        {
+          "name": "@lexical/history",
+          "version": "0.51.0"
+        },
+        {
+          "name": "@lexical/list",
+          "version": "0.51.0"
+        },
+        {
+          "name": "@lexical/code",
+          "version": "0.51.0"
+        },
+        {
+          "name": "@lexical/link",
+          "version": "0.51.0"
+        },
+        {
+          "name": "@lexical/table",
+          "version": "0.51.0"
+        },
+        {
+          "name": "@lexical/markdown",
+          "version": "0.51.0"
+        },
+        {
+          "name": "@lexical/utils",
+          "version": "0.51.0"
+        }
+      ],
+      "js": 97894,
+      "css": 0,
+      "total": 97894,
+      "mountMs": 18.9,
+      "keyP95Ms": 16.7,
+      "inputP95Ms": 1.1
+    },
+    {
+      "editor": "lexical",
+      "setup": "minimal",
+      "packages": [
+        {
+          "name": "lexical",
+          "version": "0.51.0"
+        },
+        {
+          "name": "@lexical/plain-text",
+          "version": "0.51.0"
+        },
+        {
+          "name": "@lexical/history",
+          "version": "0.51.0"
+        }
+      ],
+      "js": 68701,
+      "css": 0,
+      "total": 68701,
+      "mountMs": 17.1,
+      "keyP95Ms": 16.8,
+      "inputP95Ms": 1.1
+    },
+    {
+      "editor": "plate",
+      "setup": "full",
+      "packages": [
+        {
+          "name": "platejs",
+          "version": "53.3.14"
+        },
+        {
+          "name": "@platejs/basic-nodes",
+          "version": "53.0.0"
+        },
+        {
+          "name": "@platejs/list",
+          "version": "53.3.13"
+        },
+        {
+          "name": "@platejs/table",
+          "version": "53.0.9"
+        },
+        {
+          "name": "@platejs/code-block",
+          "version": "53.0.0"
+        },
+        {
+          "name": "@platejs/link",
+          "version": "53.3.5"
+        },
+        {
+          "name": "@platejs/media",
+          "version": "53.1.4"
+        }
+      ],
+      "js": 178126,
+      "css": 0,
+      "total": 178126,
+      "mountMs": 65.9,
+      "keyP95Ms": 16.2,
+      "inputP95Ms": 6.1
+    },
+    {
+      "editor": "plate",
+      "setup": "minimal",
+      "packages": [
+        {
+          "name": "platejs",
+          "version": "53.3.14"
+        }
+      ],
+      "js": 140203,
+      "css": 0,
+      "total": 140203,
+      "mountMs": 63.2,
+      "keyP95Ms": 16.6,
+      "inputP95Ms": 5.7
+    },
+    {
+      "editor": "quill",
+      "setup": "full",
+      "packages": [
+        {
+          "name": "quill",
+          "version": "2.0.3"
+        }
+      ],
+      "js": 59745,
+      "css": 3711,
+      "total": 63456,
+      "mountMs": 30.3,
+      "keyP95Ms": 16.9,
+      "inputP95Ms": 1.1
+    },
+    {
+      "editor": "quill",
+      "setup": "minimal",
+      "packages": [
+        {
+          "name": "quill (core)",
+          "version": "2.0.3"
+        }
+      ],
+      "js": 44774,
+      "css": 1709,
+      "total": 46483,
+      "mountMs": 26.2,
+      "keyP95Ms": 14.9,
+      "inputP95Ms": 0.9
+    },
+    {
+      "editor": "tiptap",
+      "setup": "full",
+      "packages": [
+        {
+          "name": "@tiptap/core",
+          "version": "3.31.3"
+        },
+        {
+          "name": "@tiptap/pm",
+          "version": "3.31.3"
+        },
+        {
+          "name": "@tiptap/starter-kit",
+          "version": "3.31.3"
+        },
+        {
+          "name": "@tiptap/extension-list",
+          "version": "3.31.3"
+        },
+        {
+          "name": "@tiptap/extension-table",
+          "version": "3.31.3"
+        },
+        {
+          "name": "@tiptap/extension-image",
+          "version": "3.31.3"
+        }
+      ],
+      "js": 135434,
+      "css": 0,
+      "total": 135434,
+      "mountMs": 23.8,
+      "keyP95Ms": 15.9,
+      "inputP95Ms": 1.4
+    },
+    {
+      "editor": "tiptap",
+      "setup": "minimal",
+      "packages": [
+        {
+          "name": "@tiptap/core",
+          "version": "3.31.3"
+        },
+        {
+          "name": "@tiptap/pm",
+          "version": "3.31.3"
+        },
+        {
+          "name": "@tiptap/extension-document",
+          "version": "3.31.3"
+        },
+        {
+          "name": "@tiptap/extension-paragraph",
+          "version": "3.31.3"
+        },
+        {
+          "name": "@tiptap/extension-text",
+          "version": "3.31.3"
+        }
+      ],
+      "js": 89607,
+      "css": 0,
+      "total": 89607,
+      "mountMs": 21.4,
+      "keyP95Ms": 16.6,
+      "inputP95Ms": 1.2
+    },
+    {
+      "editor": "verbal",
+      "setup": "full",
+      "packages": [
+        {
+          "name": "@verbal/editor",
+          "version": "0.1.0"
+        },
+        {
+          "name": "@verbal/editor/react",
+          "version": "0.1.0"
+        },
+        {
+          "name": "@verbal/editor/preset",
+          "version": "0.1.0"
+        }
+      ],
+      "js": 31099,
+      "css": 4584,
+      "total": 35683,
+      "mountMs": 31.3,
+      "keyP95Ms": 15.2,
+      "inputP95Ms": 0.6,
+      "rendersPerKey": 0
+    },
+    {
+      "editor": "verbal",
+      "setup": "minimal",
+      "packages": [
+        {
+          "name": "@verbal/editor",
+          "version": "0.1.0"
+        },
+        {
+          "name": "@verbal/editor/react",
+          "version": "0.1.0"
+        }
+      ],
+      "js": 12537,
+      "css": 1368,
+      "total": 13905,
+      "mountMs": 30.5,
+      "keyP95Ms": 14.7,
+      "inputP95Ms": 0.5,
+      "rendersPerKey": 0
+    }
+  ],
+  "notion": {
+    "url": "https://notion.notion.site/",
+    "measured": false,
+    "reason": "Just a moment...: the page answered with a bot check instead of its content"
+  }
+}

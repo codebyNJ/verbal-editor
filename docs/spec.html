@@ -1,0 +1,769 @@
+<title>Verbal Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+
+<style>
+:root{
+  --paper:#F8F9F7; --surface:#FFFFFF; --surface-2:#F1F4F2;
+  --ink:#14181A; --ink-2:#2E3A3B; --muted:#5E6A6B; --faint:#8C9899;
+  --rule:#DEE4E2; --rule-strong:#C6D0CD;
+  --accent:#0E6F6C; --wash:#D7EAE7;
+  --ok:#2C6E49; --warn:#8A5E00; --crit:#A33A2A;
+  --code-bg:#F1F4F2; --comment:#7B8A89;
+  --shadow:0 1px 2px rgba(20,24,26,.04), 0 8px 24px -12px rgba(20,24,26,.10);
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E1214; --surface:#151A1C; --surface-2:#1A2123;
+    --ink:#E8EDEB; --ink-2:#C6D0CE; --muted:#93A1A0; --faint:#6E7C7C;
+    --rule:#243033; --rule-strong:#334245;
+    --accent:#4FC3BD; --wash:#16302F;
+    --ok:#5FBF87; --warn:#D2A33F; --crit:#E0806E;
+    --code-bg:#11181A; --comment:#6E7C7C;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1214; --surface:#151A1C; --surface-2:#1A2123;
+  --ink:#E8EDEB; --ink-2:#C6D0CE; --muted:#93A1A0; --faint:#6E7C7C;
+  --rule:#243033; --rule-strong:#334245;
+  --accent:#4FC3BD; --wash:#16302F;
+  --ok:#5FBF87; --warn:#D2A33F; --crit:#E0806E;
+  --code-bg:#11181A; --comment:#6E7C7C;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:2rem}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{animation:none!important;transition:none!important}}
+
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--serif); font-size:17px; line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+
+.wrap{max-width:1180px; margin:0 auto; padding:0 1.5rem 6rem}
+.layout{display:grid; grid-template-columns:1fr; gap:3rem}
+@media (min-width:1080px){
+  .layout{grid-template-columns:210px minmax(0,1fr); gap:4rem; align-items:start}
+}
+
+/* ---------- nav rail ---------- */
+.rail{display:none}
+@media (min-width:1080px){
+  .rail{display:block; position:sticky; top:2rem; font-family:var(--sans); font-size:12.5px}
+}
+.rail h4{
+  font-family:var(--mono); font-size:10.5px; font-weight:600; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--faint); margin:0 0 .6rem;
+}
+.rail ul{list-style:none; margin:0 0 1.6rem; padding:0; display:flex; flex-direction:column; gap:.1rem}
+.rail a{
+  display:block; padding:.3rem .55rem; color:var(--muted); text-decoration:none;
+  border-radius:3px; border-left:2px solid transparent; line-height:1.4;
+}
+.rail a:hover{color:var(--accent); background:var(--wash); border-left-color:var(--accent)}
+.rail a:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+
+/* ---------- masthead ---------- */
+header.mast{padding:4.5rem 0 2.5rem; border-bottom:1px solid var(--rule)}
+.eyebrow{
+  font-family:var(--mono); font-size:11px; font-weight:500; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--accent); margin:0 0 1.4rem;
+}
+h1{
+  font-family:var(--mono); font-weight:600; font-size:clamp(2.4rem,6vw,3.9rem);
+  line-height:1.02; letter-spacing:-.035em; margin:0 0 1.2rem; text-wrap:balance; color:var(--ink);
+}
+h1 mark{background:var(--wash); color:var(--accent); padding:0 .08em; border-radius:2px}
+.standfirst{
+  font-family:var(--serif); font-size:clamp(1.05rem,2.2vw,1.3rem); line-height:1.5;
+  color:var(--ink-2); max-width:48ch; margin:0 0 2.2rem;
+}
+.meta{
+  display:flex; flex-wrap:wrap; gap:.5rem 2rem; font-family:var(--mono);
+  font-size:11.5px; color:var(--faint); letter-spacing:.02em;
+}
+.meta b{color:var(--ink-2); font-weight:500}
+
+/* ---------- doc index ---------- */
+.docindex{display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:1px;
+  background:var(--rule); border:1px solid var(--rule); margin:2.5rem 0 0}
+.docindex a{
+  background:var(--surface); padding:1.1rem 1.2rem 1.2rem; text-decoration:none; display:block;
+  transition:background .15s;
+}
+.docindex a:hover{background:var(--wash)}
+.docindex a:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.docindex .n{font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; color:var(--accent); display:block; margin-bottom:.45rem}
+.docindex .t{font-family:var(--mono); font-size:1.02rem; font-weight:600; color:var(--ink); letter-spacing:-.01em; display:block; margin-bottom:.3rem}
+.docindex .d{font-family:var(--sans); font-size:12.5px; color:var(--muted); line-height:1.45; display:block}
+
+/* ---------- document sections ---------- */
+.doc{padding-top:4.5rem}
+.docrule{
+  display:flex; align-items:baseline; gap:1rem; border-bottom:2px solid var(--ink);
+  padding-bottom:.5rem; margin-bottom:2.5rem;
+}
+.docrule .num{font-family:var(--mono); font-size:11px; letter-spacing:.16em; color:var(--accent); font-weight:600}
+.docrule h2{font-family:var(--mono); font-weight:600; font-size:clamp(1.4rem,3.4vw,1.85rem); letter-spacing:-.025em; margin:0; color:var(--ink)}
+.docrule .sub{font-family:var(--sans); font-size:12.5px; color:var(--faint); margin-left:auto; white-space:nowrap}
+
+h3{
+  font-family:var(--mono); font-weight:600; font-size:1.05rem; letter-spacing:-.01em;
+  color:var(--ink); margin:3rem 0 1rem; padding-top:.2rem; text-wrap:balance;
+}
+h3 .sec{color:var(--faint); font-weight:400; margin-right:.55rem}
+h4{font-family:var(--sans); font-weight:600; font-size:.88rem; letter-spacing:.01em; color:var(--ink-2); margin:2rem 0 .7rem}
+
+p{max-width:66ch; margin:0 0 1.1rem}
+p strong{font-weight:500; color:var(--ink)}
+p em{font-style:italic}
+a{color:var(--accent); text-decoration-thickness:1px; text-underline-offset:2px}
+code{font-family:var(--mono); font-size:.855em; background:var(--code-bg); padding:.1em .34em; border-radius:3px; color:var(--ink-2)}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto; margin:1.4rem 0 2rem; border:1px solid var(--rule); background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-family:var(--sans); font-size:13.2px; line-height:1.5}
+th{
+  font-family:var(--mono); font-size:10px; font-weight:600; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--faint); text-align:left; padding:.7rem .85rem; border-bottom:1px solid var(--rule-strong);
+  background:var(--surface-2); white-space:nowrap;
+}
+td{padding:.72rem .85rem; border-bottom:1px solid var(--rule); color:var(--ink-2); vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.id{font-family:var(--mono); font-size:11.5px; color:var(--accent); font-weight:500; white-space:nowrap}
+td.feat{font-weight:600; color:var(--ink); white-space:nowrap}
+td.num{font-family:var(--mono); font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap}
+td.ctr{text-align:center}
+td s{color:var(--faint); text-decoration-color:var(--rule-strong)}
+
+/* ---------- chips ---------- */
+.chip{
+  display:inline-block; font-family:var(--mono); font-size:10px; font-weight:600; letter-spacing:.08em;
+  padding:.16rem .4rem; border-radius:2px; border:1px solid; white-space:nowrap;
+}
+.p0{color:var(--crit); border-color:var(--crit); background:color-mix(in srgb,var(--crit) 8%,transparent)}
+.p1{color:var(--warn); border-color:var(--warn); background:color-mix(in srgb,var(--warn) 8%,transparent)}
+.p2{color:var(--muted); border-color:var(--rule-strong); background:transparent}
+
+/* ---------- budget bars ---------- */
+.bar{display:flex; align-items:center; gap:.5rem; min-width:118px}
+.bar .track{flex:1; height:4px; background:var(--rule); border-radius:2px; overflow:hidden}
+.bar .fill{display:block; height:100%; background:var(--accent); border-radius:2px}
+.bar .kb{font-family:var(--mono); font-size:11px; font-variant-numeric:tabular-nums; color:var(--muted); width:42px; text-align:right}
+
+/* ---------- weight chart ---------- */
+.weights{margin:2rem 0 2.5rem; border:1px solid var(--rule); background:var(--surface); padding:1.6rem 1.5rem 1.3rem}
+.weights .cap{font-family:var(--mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--faint); margin-bottom:1.3rem}
+.wrow{display:grid; grid-template-columns:minmax(120px,168px) 1fr 62px; align-items:center; gap:.9rem; padding:.42rem 0}
+.wrow .lab{font-family:var(--sans); font-size:12.5px; color:var(--ink-2)}
+.wrow .track{height:11px; background:var(--surface-2); position:relative}
+.wrow .fill{display:block; height:100%; background:var(--rule-strong)}
+.wrow .val{font-family:var(--mono); font-size:11.5px; font-variant-numeric:tabular-nums; color:var(--muted); text-align:right}
+.wrow.hi .lab{color:var(--accent); font-weight:600}
+.wrow.hi .fill{background:var(--accent)}
+.wrow.hi .val{color:var(--accent); font-weight:500}
+.wrow.ref .fill{background:var(--ink-2)}
+.wrow.ref .lab{font-weight:600; color:var(--ink)}
+
+/* ---------- code ---------- */
+pre{
+  font-family:var(--mono); font-size:12.4px; line-height:1.62; background:var(--code-bg);
+  border:1px solid var(--rule); padding:1.05rem 1.2rem; overflow-x:auto; margin:1.3rem 0 1.8rem;
+  color:var(--ink-2); tab-size:2;
+}
+pre code{background:none; padding:0; font-size:inherit; color:inherit}
+pre .c{color:var(--comment); font-style:italic}
+pre .k{color:var(--accent)}
+.codecap{
+  font-family:var(--mono); font-size:10px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--faint); margin:1.6rem 0 -.9rem;
+}
+
+/* ---------- callouts ---------- */
+.note{
+  border-left:2px solid var(--accent); background:var(--wash); padding:1rem 1.2rem;
+  margin:1.6rem 0 1.8rem; max-width:68ch;
+}
+.note p{margin:0; font-size:15.5px; color:var(--ink-2); max-width:none}
+.note p + p{margin-top:.7rem}
+.note .lbl{font-family:var(--mono); font-size:10px; letter-spacing:.13em; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:.45rem; font-weight:600}
+
+ul.plain{font-family:var(--sans); font-size:14.5px; color:var(--ink-2); max-width:66ch; padding-left:1.1rem; margin:0 0 1.4rem}
+ul.plain li{margin-bottom:.4rem}
+ul.plain li::marker{color:var(--faint)}
+
+.scope{font-family:var(--sans); font-size:14px; color:var(--ink-2); max-width:68ch; line-height:1.7}
+.scope b{font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:.3rem}
+
+/* ---------- layer diagram ---------- */
+.layers{margin:1.6rem 0 2rem; border:1px solid var(--rule); background:var(--surface)}
+.layer{padding:1.05rem 1.3rem; border-bottom:1px solid var(--rule)}
+.layer:last-child{border-bottom:0}
+.layer .nm{font-family:var(--mono); font-size:10.5px; font-weight:600; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); margin-bottom:.35rem}
+.layer .bd{font-family:var(--sans); font-size:13px; color:var(--ink-2); line-height:1.55}
+.layer .bd code{font-size:12px}
+.layer.core{background:var(--surface-2)}
+.flowdir{font-family:var(--mono); font-size:10px; letter-spacing:.12em; color:var(--faint); text-align:center; padding:.35rem; border-bottom:1px solid var(--rule); background:var(--paper)}
+
+/* ---------- footer ---------- */
+footer{margin-top:5rem; padding-top:1.8rem; border-top:1px solid var(--rule); font-family:var(--sans); font-size:12.5px; color:var(--muted); max-width:72ch}
+footer .lbl{font-family:var(--mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--faint); display:block; margin-bottom:.6rem}
+footer a{color:var(--muted); text-decoration-color:var(--rule-strong)}
+footer a:hover{color:var(--accent)}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <p class="eyebrow">Verbal OSS · Specification v0.1</p>
+  <h1>A block editor<br>that weighs <mark>nothing</mark></h1>
+  <p class="standfirst">Notion-grade editing fidelity at Oat UI's weight class. Zero runtime dependencies, zero re-renders while typing, and every text format an independently importable module.</p>
+  <div class="meta">
+    <span><b>Status</b> &nbsp;Draft for review</span>
+    <span><b>Date</b> &nbsp;20 Sep 2026</span>
+    <span><b>Scope</b> &nbsp;PRD · FTR · HLD</span>
+    <span><b>Excludes</b> &nbsp;Implementation sequencing</span>
+  </div>
+
+  <nav class="docindex">
+    <a href="#prd"><span class="n">DOCUMENT 1</span><span class="t">PRD</span><span class="d">Problem, goals, non-goals, users, success metrics, constraints, risks.</span></a>
+    <a href="#ftr"><span class="n">DOCUMENT 2</span><span class="t">FTR</span><span class="d">40 numbered features with technical requirements, acceptance criteria and size budgets.</span></a>
+    <a href="#hld"><span class="n">DOCUMENT 3</span><span class="t">HLD</span><span class="d">Design thesis, architecture, data and transaction models, key flows, decision log.</span></a>
+  </nav>
+</header>
+
+<div class="layout">
+
+<nav class="rail" aria-label="Contents">
+  <h4>PRD</h4>
+  <ul>
+    <li><a href="#prd-problem">Problem</a></li>
+    <li><a href="#prd-goals">Goals &amp; non-goals</a></li>
+    <li><a href="#prd-users">Users</a></li>
+    <li><a href="#prd-metrics">Success metrics</a></li>
+    <li><a href="#prd-scope">Scope &amp; constraints</a></li>
+    <li><a href="#prd-risks">Risks</a></li>
+  </ul>
+  <h4>FTR</h4>
+  <ul>
+    <li><a href="#ftr-foundation">Foundation</a></li>
+    <li><a href="#ftr-text">Text formatting</a></li>
+    <li><a href="#ftr-structure">Structure</a></li>
+    <li><a href="#ftr-rich">Rich blocks</a></li>
+    <li><a href="#ftr-interaction">Interaction</a></li>
+    <li><a href="#ftr-ai">AI</a></li>
+    <li><a href="#ftr-platform">Platform</a></li>
+  </ul>
+  <h4>HLD</h4>
+  <ul>
+    <li><a href="#hld-thesis">Design thesis</a></li>
+    <li><a href="#hld-layers">Architecture</a></li>
+    <li><a href="#hld-model">Data model</a></li>
+    <li><a href="#hld-tx">Transactions</a></li>
+    <li><a href="#hld-render">Rendering model</a></li>
+    <li><a href="#hld-contract">Module contract</a></li>
+    <li><a href="#hld-flows">Key flows</a></li>
+    <li><a href="#hld-platform">Platform deps</a></li>
+    <li><a href="#hld-cross">Cross-cutting</a></li>
+    <li><a href="#hld-decisions">Decision log</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- ================= DOCUMENT 1 — PRD ================= -->
+<section class="doc" id="prd">
+  <div class="docrule">
+    <span class="num">DOCUMENT 1</span>
+    <h2>PRD</h2>
+    <span class="sub">Product Requirements</span>
+  </div>
+
+  <h3 id="prd-problem"><span class="sec">1</span>Problem</h3>
+  <p>Rich-text editing on the web is solved badly at both ends. Hosted editors are closed and un-embeddable. Open editor frameworks are heavy and force their architecture onto the host app — a team adopting one inherits a dependency tree, a plugin API they did not choose, and a bundle that grows whether or not they use the features. A team building their own hits <code>contenteditable</code> and stops.</p>
+
+  <div class="weights">
+    <div class="cap">Realistic production bundle · gzipped KB</div>
+    <div class="wrow"><span class="lab">Plate / Slate</span><span class="track"><span class="fill" style="width:83%"></span></span><span class="val">120–180</span></div>
+    <div class="wrow"><span class="lab">Tiptap, feature-complete</span><span class="track"><span class="fill" style="width:55%"></span></span><span class="val">80–120</span></div>
+    <div class="wrow"><span class="lab">Tiptap + basics</span><span class="track"><span class="fill" style="width:33%"></span></span><span class="val">50–70</span></div>
+    <div class="wrow"><span class="lab">Lexical, real document</span><span class="track"><span class="fill" style="width:28%"></span></span><span class="val">40–60</span></div>
+    <div class="wrow"><span class="lab">Lexical core alone</span><span class="track"><span class="fill" style="width:12%"></span></span><span class="val">22</span></div>
+    <div class="wrow hi"><span class="lab">Verbal — full preset</span><span class="track"><span class="fill" style="width:17%"></span></span><span class="val">30</span></div>
+    <div class="wrow hi"><span class="lab">Verbal — core</span><span class="track"><span class="fill" style="width:7%"></span></span><span class="val">12</span></div>
+    <div class="wrow ref"><span class="lab">Oat UI — the bar</span><span class="track"><span class="fill" style="width:6%"></span></span><span class="val">10</span></div>
+  </div>
+
+  <p><a href="https://oat.ink/">Oat UI</a> sets the reference: 7KB of CSS plus 2.9KB of JS, zero dependencies, semantic HTML styled without class soup. That is the weight class this editor targets, at Notion's feature set.</p>
+
+  <h3 id="prd-goals"><span class="sec">2</span>Goals</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:56px">ID</th><th>Goal</th></tr></thead>
+    <tbody>
+      <tr><td class="id">G-1</td><td>A block editor with Notion-level editing fidelity at a fraction of the weight.</td></tr>
+      <tr><td class="id">G-2</td><td>Zero third-party runtime dependencies — everything built in-house.</td></tr>
+      <tr><td class="id">G-3</td><td>Every text format is an independently importable module; consumers pay only for what they import.</td></tr>
+      <tr><td class="id">G-4</td><td>Zero React re-renders during editing, enforced as a build gate rather than claimed.</td></tr>
+      <tr><td class="id">G-5</td><td>A Notion-style JSON payload that is portable, diffable, and stable at document scale.</td></tr>
+      <tr><td class="id">G-6</td><td>AI edits presented as a reviewable diff, never a silent replacement.</td></tr>
+      <tr><td class="id">G-7</td><td>Self-hostable, config-driven, documented to the standard of a top-tier OSS project.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h4>Non-goals</h4>
+  <div class="tw"><table>
+    <thead><tr><th style="width:56px">ID</th><th style="width:210px">Not building</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr><td class="id">NG-1</td><td class="feat">Real-time collaboration</td><td>Transactions are designed to <em>permit</em> it — serializable, invertible, rebaseable. No CRDT and no sync server are built.</td></tr>
+      <tr><td class="id">NG-2</td><td class="feat">A charting library</td><td>Four chart types driven by table data. Not a d3 competitor.</td></tr>
+      <tr><td class="id">NG-3</td><td class="feat">Complete LaTeX coverage</td><td>A documented math subset. Full TeX is why KaTeX weighs 75KB.</td></tr>
+      <tr><td class="id">NG-4</td><td class="feat">File storage</td><td>The host application's concern; the editor exposes upload hooks.</td></tr>
+      <tr><td class="id">NG-5</td><td class="feat">A CMS or page-tree</td><td>An editor component, not a product clone.</td></tr>
+      <tr><td class="id">NG-6</td><td class="feat">Legacy browsers</td><td>Modern evergreen engines only — the design depends on the platform features in HLD §8.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="prd-users"><span class="sec">3</span>Users</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:190px">Persona</th><th>Need</th><th>Design implication</th></tr></thead>
+    <tbody>
+      <tr><td class="feat">Product engineer<br>embedding an editor</td><td>Drop-in component, small bundle, does not dictate app architecture.</td><td>Framework-free core, thin React binding, subpath imports.</td></tr>
+      <tr><td class="feat">OSS contributor</td><td>Add a block type without understanding the whole system.</td><td>One documented module contract is the entire contribution surface.</td></tr>
+      <tr><td class="feat">Self-hosting team</td><td>Run it on their own infrastructure and validate their own content.</td><td>Config file, CLI, server-side schema validation.</td></tr>
+      <tr><td class="feat">Writer</td><td>It behaves like Notion and does not lose the cursor.</td><td>Per-block contenteditable, native input handling, no jank.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="prd-metrics"><span class="sec">4</span>Success metrics</h3>
+  <p>Every metric is machine-checkable. None of them is a judgement call, and each one fails the build rather than producing a warning.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Metric</th><th style="width:110px">Target</th><th style="width:230px">Measured by</th></tr></thead>
+    <tbody>
+      <tr><td>Core bundle — core + React binding + paragraph</td><td class="num">≤ 12.5 KB</td><td>Size gate in CI</td></tr>
+      <tr><td>Full default preset</td><td class="num">≤ 31.5 KB</td><td>Size gate in CI</td></tr>
+      <tr><td>Total CSS</td><td class="num">≤ 8 KB</td><td>Size gate in CI</td></tr>
+      <tr><td>React renders per keystroke</td><td class="num">0</td><td>Instrumented browser test</td></tr>
+      <tr><td>React renders per structural edit</td><td class="num">1</td><td>Instrumented browser test — affected block only</td></tr>
+      <tr><td>Input latency, p95</td><td class="num">&lt; 16 ms</td><td>Browser performance trace — one frame</td></tr>
+      <tr><td>Runtime dependencies</td><td class="num">0</td><td><code>package.json</code> assertion in CI</td></tr>
+      <tr><td>Document round-trip fidelity</td><td class="num">100%</td><td><code>parse(serialize(doc)) === doc</code>, all block types</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="prd-scope"><span class="sec">5</span>Scope &amp; constraints</h3>
+  <p class="scope"><b>In scope</b>Markdown input rules · bold · italic · strike · inline code · headings 1–3 · code blocks with language recognition · bullet lists · numbered lists · to-do · quotes · dividers · tables · charts · LaTeX and equations · emoji · hyperlink and external embeds · multi-section column layout · slash commands · draggable blocks · nesting · undo and redo · AI diff review · config file · CLI · self-hosted build · docs.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th style="width:56px">ID</th><th>Constraint</th></tr></thead>
+    <tbody>
+      <tr><td class="id">C-1</td><td>JavaScript. No TypeScript requirement; types published as JSDoc-generated <code>.d.ts</code>.</td></tr>
+      <tr><td class="id">C-2</td><td>Joi is the only validation library, and never ships in the client bundle.</td></tr>
+      <tr><td class="id">C-3</td><td>CSS Modules for all component styling; Tailwind limited to app-shell and demo surfaces.</td></tr>
+      <tr><td class="id">C-4</td><td>Zero runtime dependencies. Dev dependencies are permitted and are not part of the claim.</td></tr>
+      <tr><td class="id">C-5</td><td>Every behavioural question resolved against current React and MDN/spec documentation, not recalled defaults.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="prd-risks"><span class="sec">6</span>Risks</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:230px">Risk</th><th style="width:76px">Impact</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr><td class="feat">LaTeX subset frustrates power users</td><td>Medium</td><td>Documented command list; an explicit "unsupported command" error, never silent mis-rendering.</td></tr>
+      <tr><td class="feat">Regex tokenizers mis-highlight edge cases</td><td>Low</td><td>Ceiling documented per language; upgrade path to a real lexer, per language, on demand.</td></tr>
+      <tr><td class="feat">Table is the hardest module</td><td>Medium</td><td>Isolated module boundary — its complexity cannot leak into core.</td></tr>
+      <tr><td class="feat">"Zero dependencies" read as excluding dev tooling</td><td>Low</td><td>Stated explicitly in the README and this PRD.</td></tr>
+      <tr><td class="feat">Bundle budgets drift as features land</td><td>High</td><td>Budgets are CI gates, not guidance. The build fails.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ================= DOCUMENT 2 — FTR ================= -->
+<section class="doc" id="ftr">
+  <div class="docrule">
+    <span class="num">DOCUMENT 2</span>
+    <h2>FTR</h2>
+    <span class="sub">Feature Technical Requirements</span>
+  </div>
+
+  <p>Forty features across seven groups. Each carries a technical requirement, the acceptance criterion that closes it, and a gzip budget. Budget bars are drawn to a common 12KB scale, so the whole feature set can be read against the core bundle at a glance.</p>
+  <p><span class="chip p0">P0</span> required for a usable editor &nbsp; <span class="chip p1">P1</span> required for parity with the brief &nbsp; <span class="chip p2">P2</span> valuable, not blocking</p>
+
+  <h3 id="ftr-foundation"><span class="sec">2.1</span>Foundation</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:52px">ID</th><th style="width:132px">Feature</th><th style="width:46px">Pri</th><th>Technical requirement</th><th style="width:230px">Acceptance</th><th style="width:132px">Budget</th></tr></thead>
+    <tbody>
+      <tr><td class="id">F-01</td><td class="feat">Document model</td><td class="ctr"><span class="chip p0">P0</span></td><td>Flat <code>{ id → block }</code> map plus <code>children</code> order arrays. O(1) lookup, ids stable across moves.</td><td>Model ops unit-tested with no DOM; ids survive move and undo.</td><td>—</td></tr>
+      <tr><td class="id">F-02</td><td class="feat">Transactions</td><td class="ctr"><span class="chip p0">P0</span></td><td>Serializable ops carrying inverse data. <code>apply</code>, <code>invert</code>; <code>rebase</code> signature reserved.</td><td>Every op has an apply test, an invert test, and an invalid-input rejection test.</td><td>—</td></tr>
+      <tr><td class="id">F-03</td><td class="feat">History</td><td class="ctr"><span class="chip p0">P0</span></td><td>Undo/redo stack built on <code>invert</code>. Coalesces consecutive text ops.</td><td>Undo restores model <em>and</em> selection exactly.</td><td>—</td></tr>
+      <tr><td class="id">F-04</td><td class="feat">Selection</td><td class="ctr"><span class="chip p0">P0</span></td><td>Bidirectional map between model coordinates and DOM <code>Range</code>.</td><td>Round-trips across every block type, nested and void included.</td><td>—</td></tr>
+      <tr><td class="id">F-05</td><td class="feat">Input routing</td><td class="ctr"><span class="chip p0">P0</span></td><td><code>beforeinput</code> router. <code>insertText</code> and <code>deleteContentBackward</code> pass through untouched; every other <code>inputType</code> handled explicitly or prevented.</td><td>An unknown <code>inputType</code> can never mutate the document.</td><td>—</td></tr>
+      <tr><td class="id">F-06</td><td class="feat">Block registry</td><td class="ctr"><span class="chip p0">P0</span></td><td>Modules self-register block types, marks, slash entries, shortcuts, parse and serialize rules.</td><td>Core with zero registered modules still edits paragraphs.</td><td>—</td></tr>
+      <tr><td class="id">F-07</td><td class="feat">React binding</td><td class="ctr"><span class="chip p0">P0</span></td><td><code>useSyncExternalStore</code>, one subscription per block id, versioned store.</td><td>Typing produces 0 renders; a structural edit produces exactly 1.</td><td><span class="bar"><span class="track"><span class="fill" style="width:100%"></span></span><span class="kb">12.0</span></span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="ftr-text"><span class="sec">2.2</span>Text formatting</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:52px">ID</th><th style="width:132px">Feature</th><th style="width:46px">Pri</th><th>Technical requirement</th><th style="width:230px">Acceptance</th><th style="width:132px">Budget</th></tr></thead>
+    <tbody>
+      <tr><td class="id">F-10</td><td class="feat">Bold, italic,<br>strike, inline code</td><td class="ctr"><span class="chip p0">P0</span></td><td>Surgical DOM surgery — split the text node, wrap, restore the <code>Range</code>. <strong><code>execCommand</code> is prohibited</strong>: its cross-browser markup output is non-deterministic.</td><td>Identical resulting DOM in Chromium, Firefox and WebKit.</td><td><span class="bar"><span class="track"><span class="fill" style="width:8%"></span></span><span class="kb">1.0</span></span></td></tr>
+      <tr><td class="id">F-11</td><td class="feat">Headings 1–3</td><td class="ctr"><span class="chip p0">P0</span></td><td><code>level</code> prop; the node is recreated only when the level changes.</td><td><code># </code> input rule; <code>Mod-Alt-{1,2,3}</code>; round-trips to markdown.</td><td><span class="bar"><span class="track"><span class="fill" style="width:8%"></span></span><span class="kb">1.0</span></span></td></tr>
+      <tr><td class="id">F-12</td><td class="feat">Quote</td><td class="ctr"><span class="chip p0">P0</span></td><td><code>&lt;blockquote&gt;</code>; <code>&gt; </code> input rule.</td><td>Nests other blocks as children.</td><td><span class="bar"><span class="track"><span class="fill" style="width:4%"></span></span><span class="kb">0.5</span></span></td></tr>
+      <tr><td class="id">F-13</td><td class="feat">Divider</td><td class="ctr"><span class="chip p1">P1</span></td><td>Void block, <code>---</code> input rule.</td><td>Non-editable; arrow keys traverse past it correctly.</td><td><span class="bar"><span class="track"><span class="fill" style="width:3%"></span></span><span class="kb">0.3</span></span></td></tr>
+      <tr><td class="id">F-14</td><td class="feat">Markdown<br>input rules</td><td class="ctr"><span class="chip p0">P0</span></td><td>Regex table in core, extended per module.</td><td>Rules fire on the trigger character and undo as a single step.</td><td>—</td></tr>
+      <tr><td class="id">F-15</td><td class="feat">Link</td><td class="ctr"><span class="chip p0">P0</span></td><td>Mark carrying <code>href</code>; pasting over a selection creates a link.</td><td>URL validated before commit; <code>rel="noopener noreferrer"</code> enforced.</td><td><span class="bar"><span class="track"><span class="fill" style="width:8%"></span></span><span class="kb">1.0</span></span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="ftr-structure"><span class="sec">2.3</span>Structure</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:52px">ID</th><th style="width:132px">Feature</th><th style="width:46px">Pri</th><th>Technical requirement</th><th style="width:230px">Acceptance</th><th style="width:132px">Budget</th></tr></thead>
+    <tbody>
+      <tr><td class="id">F-20</td><td class="feat">Bullet +<br>numbered lists</td><td class="ctr"><span class="chip p0">P0</span></td><td><strong>One module</strong> with an <code>ordered</code> prop — the two differ by a CSS property and a counter.</td><td>Tab / Shift-Tab indent; numbering stays correct after any reorder.</td><td><span class="bar"><span class="track"><span class="fill" style="width:13%"></span></span><span class="kb">1.5</span></span></td></tr>
+      <tr><td class="id">F-21</td><td class="feat">To-do</td><td class="ctr"><span class="chip p0">P0</span></td><td><code>checked</code> prop; the checkbox sits outside the editable region.</td><td>Toggling the checkbox never moves the caret.</td><td><span class="bar"><span class="track"><span class="fill" style="width:7%"></span></span><span class="kb">0.8</span></span></td></tr>
+      <tr><td class="id">F-22</td><td class="feat">Nesting</td><td class="ctr"><span class="chip p0">P0</span></td><td><code>children</code> arrays; indent and outdent are <code>moveBlock</code> transactions.</td><td>Undoing an indent restores the exact prior position.</td><td>—</td></tr>
+      <tr><td class="id">F-23</td><td class="feat">Multi-section<br>columns</td><td class="ctr"><span class="chip p1">P1</span></td><td>Container block holding column children; CSS Grid.</td><td>Blocks drag between columns; collapses to one column on narrow viewports.</td><td><span class="bar"><span class="track"><span class="fill" style="width:13%"></span></span><span class="kb">1.5</span></span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="ftr-rich"><span class="sec">2.4</span>Rich blocks</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:52px">ID</th><th style="width:132px">Feature</th><th style="width:46px">Pri</th><th>Technical requirement</th><th style="width:230px">Acceptance</th><th style="width:132px">Budget</th></tr></thead>
+    <tbody>
+      <tr><td class="id">F-30</td><td class="feat">Code block</td><td class="ctr"><span class="chip p0">P0</span></td><td><strong>CSS Custom Highlight API</strong> — token colours painted over <code>Range</code>s with zero DOM nodes inserted into the editable region.</td><td>Caret and selection behave identically to plain text at any position.</td><td><span class="bar"><span class="track"><span class="fill" style="width:25%"></span></span><span class="kb">3.0</span></span></td></tr>
+      <tr><td class="id">F-31</td><td class="feat">Language<br>tokenizers</td><td class="ctr"><span class="chip p0">P0</span></td><td>A ~40-line regex tokenizer per language, lazily loaded on demand.</td><td>Never bundled with core; a language loads on first use.</td><td><span class="bar"><span class="track"><span class="fill" style="width:4%"></span></span><span class="kb">0.5</span></span></td></tr>
+      <tr><td class="id">F-32</td><td class="feat">Language<br>recognition</td><td class="ctr"><span class="chip p1">P1</span></td><td>Heuristic scoring over signature regexes.</td><td>Correct on the top-10 languages for a ≥3-line sample; falls back to plaintext, never to a wrong guess.</td><td><span class="bar"><span class="track"><span class="fill" style="width:4%"></span></span><span class="kb">0.5</span></span></td></tr>
+      <tr><td class="id">F-33</td><td class="feat">Table</td><td class="ctr"><span class="chip p1">P1</span></td><td>Grid of per-cell editable blocks; pointer-event column resize.</td><td>Arrow and Tab navigation between cells; row and column insert/delete are single undo steps. <strong>No merged cells in v1.</strong></td><td><span class="bar"><span class="track"><span class="fill" style="width:33%"></span></span><span class="kb">4.0</span></span></td></tr>
+      <tr><td class="id">F-34</td><td class="feat">LaTeX &amp;<br>equations</td><td class="ctr"><span class="chip p1">P1</span></td><td>LaTeX subset <strong>compiled to MathML</strong>; the browser renders it natively. No JS renderer, no font payload.</td><td>~150 documented commands; inline and block modes; unsupported commands raise a visible explicit error.</td><td><span class="bar"><span class="track"><span class="fill" style="width:42%"></span></span><span class="kb">5.0</span></span></td></tr>
+      <tr><td class="id">F-35</td><td class="feat">Charts</td><td class="ctr"><span class="chip p2">P2</span></td><td>Hand-written SVG — line, bar, area, pie. Data sourced from a <code>table</code> block.</td><td>Re-renders on source-table change; theme-aware via CSS custom properties.</td><td><span class="bar"><span class="track"><span class="fill" style="width:25%"></span></span><span class="kb">3.0</span></span></td></tr>
+      <tr><td class="id">F-36</td><td class="feat">Embeds</td><td class="ctr"><span class="chip p1">P1</span></td><td>oEmbed / OpenGraph fetch; sandboxed <code>&lt;iframe&gt;</code> for allow-listed providers, link card otherwise.</td><td>An unknown provider can never produce an unsandboxed frame.</td><td><span class="bar"><span class="track"><span class="fill" style="width:17%"></span></span><span class="kb">2.0</span></span></td></tr>
+      <tr><td class="id">F-37</td><td class="feat">Image</td><td class="ctr"><span class="chip p1">P1</span></td><td><code>&lt;img&gt;</code> with paste and drop handling; upload delegated to a host-provided hook.</td><td>Works with no upload hook configured — data URL fallback.</td><td><span class="bar"><span class="track"><span class="fill" style="width:8%"></span></span><span class="kb">1.0</span></span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="ftr-interaction"><span class="sec">2.5</span>Interaction</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:52px">ID</th><th style="width:132px">Feature</th><th style="width:46px">Pri</th><th>Technical requirement</th><th style="width:230px">Acceptance</th><th style="width:132px">Budget</th></tr></thead>
+    <tbody>
+      <tr><td class="id">F-40</td><td class="feat">Slash commands</td><td class="ctr"><span class="chip p0">P0</span></td><td>Menu built from <code>registry.slash</code> — modules contribute entries; no central list exists to maintain.</td><td>Registering a module makes it appear with zero edits elsewhere; keyboard-navigable; filters on label and keywords.</td><td><span class="bar"><span class="track"><span class="fill" style="width:17%"></span></span><span class="kb">2.0</span></span></td></tr>
+      <tr><td class="id">F-41</td><td class="feat">Drag &amp; drop<br>blocks</td><td class="ctr"><span class="chip p0">P0</span></td><td><strong>Pointer Events</strong>, not HTML5 drag-and-drop — the native API gives uncontrollable ghost images and no fine-grained drop targeting.</td><td>Drop indicator tracks position; the drop is one undoable <code>moveBlock</code>; works on touch.</td><td><span class="bar"><span class="track"><span class="fill" style="width:17%"></span></span><span class="kb">2.0</span></span></td></tr>
+      <tr><td class="id">F-42</td><td class="feat">Selection toolbar</td><td class="ctr"><span class="chip p1">P1</span></td><td>Appears on text selection; renders <code>registry.marks</code>.</td><td>Positions within viewport bounds; dismisses on selection collapse.</td><td><span class="bar"><span class="track"><span class="fill" style="width:13%"></span></span><span class="kb">1.5</span></span></td></tr>
+      <tr><td class="id">F-43</td><td class="feat">Emoji</td><td class="ctr"><span class="chip p1">P1</span></td><td><code>:</code> trigger. Emoji data exceeds 1MB — the short-name index is fetched as a static chunk and is <strong>never bundled</strong>.</td><td>Core bundle unchanged with emoji enabled; the index loads on first <code>:</code>.</td><td><span class="bar"><span class="track"><span class="fill" style="width:4%"></span></span><span class="kb">0.5</span></span></td></tr>
+      <tr><td class="id">F-44</td><td class="feat">Keyboard<br>shortcuts</td><td class="ctr"><span class="chip p0">P0</span></td><td>Registry-driven, declared per module.</td><td>No conflicts across modules; conflicts detected at registration time.</td><td>—</td></tr>
+      <tr><td class="id">F-45</td><td class="feat">Copy &amp; paste</td><td class="ctr"><span class="chip p0">P0</span></td><td>HTML, markdown and plaintext handled. Paste is parsed to blocks, never injected as raw HTML.</td><td>Pasted content is sanitised; unknown elements degrade to paragraphs, never dropped silently.</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="ftr-ai"><span class="sec">2.6</span>AI</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:52px">ID</th><th style="width:132px">Feature</th><th style="width:46px">Pri</th><th>Technical requirement</th><th style="width:230px">Acceptance</th><th style="width:132px">Budget</th></tr></thead>
+    <tbody>
+      <tr><td class="id">F-50</td><td class="feat">Pending<br>transaction</td><td class="ctr"><span class="chip p0">P0</span></td><td>AI output becomes a valid but <strong>uncommitted</strong> transaction. The document model is untouched until accept.</td><td>Rejecting leaves the model byte-identical to before.</td><td><span class="bar"><span class="track"><span class="fill" style="width:8%"></span></span><span class="kb">1.0</span></span></td></tr>
+      <tr><td class="id">F-51</td><td class="feat">Diff rendering</td><td class="ctr"><span class="chip p0">P0</span></td><td>Word-level Myers diff, rendered through the Custom Highlight API over the real text.</td><td>Insertions and deletions visually distinct; the original text stays readable and selectable.</td><td><span class="bar"><span class="track"><span class="fill" style="width:17%"></span></span><span class="kb">2.0</span></span></td></tr>
+      <tr><td class="id">F-52</td><td class="feat">Accept / reject</td><td class="ctr"><span class="chip p0">P0</span></td><td>Accept dispatches the pending transaction through the normal path.</td><td>An accepted AI edit is undoable exactly like a typed one, with no special case.</td><td>—</td></tr>
+      <tr><td class="id">F-53</td><td class="feat">Hunk-level control</td><td class="ctr"><span class="chip p2">P2</span></td><td>Accept or reject individual diff hunks.</td><td>Partial acceptance produces a valid document.</td><td><span class="bar"><span class="track"><span class="fill" style="width:8%"></span></span><span class="kb">1.0</span></span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="ftr-platform"><span class="sec">2.7</span>Platform</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:52px">ID</th><th style="width:132px">Feature</th><th style="width:46px">Pri</th><th>Technical requirement</th><th style="width:230px">Acceptance</th><th style="width:132px">Budget</th></tr></thead>
+    <tbody>
+      <tr><td class="id">F-60</td><td class="feat">Config file</td><td class="ctr"><span class="chip p0">P0</span></td><td><code>verbal.config.js</code> with <code>defineConfig</code>. Joi-validated at build time only.</td><td>An invalid config fails the build with a precise path and message.</td><td class="num">0 · build-time</td></tr>
+      <tr><td class="id">F-61</td><td class="feat">CLI</td><td class="ctr"><span class="chip p1">P1</span></td><td><code>verbal init</code> scaffolds interactively; <code>verbal doctor</code> validates config and reports per-module bundle impact.</td><td><code>init</code> produces a working config; <code>doctor</code> surfaces the size cost of each enabled module.</td><td class="num">0 · not shipped</td></tr>
+      <tr><td class="id">F-62</td><td class="feat">Self-hosted build</td><td class="ctr"><span class="chip p1">P1</span></td><td>Server validates documents with Joi on ingest.</td><td>Malformed documents rejected at the API boundary, never persisted.</td><td>—</td></tr>
+      <tr><td class="id">F-63</td><td class="feat">Theming</td><td class="ctr"><span class="chip p0">P0</span></td><td>CSS custom properties, one <code>tokens.css</code>, automatic dark scheme.</td><td>A full re-theme with no build step and no JS.</td><td class="num">in CSS budget</td></tr>
+      <tr><td class="id">F-64</td><td class="feat">Docs</td><td class="ctr"><span class="chip p0">P0</span></td><td>Generated from the JSDoc each module already carries; a live editable example per module.</td><td>A module's documentation cannot drift from its contract.</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ================= DOCUMENT 3 — HLD ================= -->
+<section class="doc" id="hld">
+  <div class="docrule">
+    <span class="num">DOCUMENT 3</span>
+    <h2>HLD</h2>
+    <span class="sub">High-Level Design</span>
+  </div>
+
+  <h3 id="hld-thesis"><span class="sec">3.1</span>Design thesis</h3>
+  <p>Three findings determine the entire architecture. Each one removes a dependency the field currently treats as mandatory, and together they are the reason a Notion-class feature set can fit in 30KB.</p>
+
+  <h4>(a) For plain typing, do nothing</h4>
+  <p><code>contenteditable</code> and React fight over DOM ownership. Every keystroke mutates the DOM, and a re-render from state destroys the caret. The established resolution is that the editor owns the DOM and React only mounts hosts — but the stronger form is that on <code>insertText</code> and <code>deleteContentBackward</code> the editor <em>also</em> does nothing. The browser's insertion is already correct. Read the text back, update the model silently, write no DOM, render no component.</p>
+  <p>This is why zero re-renders per keystroke is achievable rather than aspirational: the fast path is an empty function.</p>
+
+  <h4>(b) Syntax highlighting needs no DOM nodes</h4>
+  <p>The <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Custom_highlight_API">CSS Custom Highlight API</a> styles arbitrary <code>Range</code>s without inserting a single element — shipped in Chrome and Edge 105, Safari 17.2, and Firefox 140 in June 2025. Code blocks become plain text nodes the caret traverses perfectly, with colour painted over the top. That eliminates the entire class of cursor bugs that makes code blocks in editable regions notoriously unstable, and the same primitive renders AI diffs, so two features share one mechanism.</p>
+
+  <h4>(c) The browser already renders maths</h4>
+  <p>MathML Core is natively supported across engines — Igalia upstreamed it into Chromium for Chrome 109, and Gecko and WebKit preceded it. The maths module is therefore a ~5KB <em>compiler</em> to MathML rather than a ~75KB gzipped renderer plus a font payload.</p>
+
+  <h3 id="hld-layers"><span class="sec">3.2</span>Architecture</h3>
+  <p>Three layers, strictly one-directional. Core never imports React; React never touches the model directly.</p>
+
+  <div class="layers">
+    <div class="layer">
+      <div class="nm">Modules</div>
+      <div class="bd"><code>blocks/*</code> · <code>marks/*</code> · <code>ui/*</code> · <code>ai/*</code> — self-registering and independently importable. Core ships knowing exactly one block type.</div>
+    </div>
+    <div class="flowdir">↓ registry contract</div>
+    <div class="layer">
+      <div class="nm">Binding</div>
+      <div class="bd"><code>react/</code> — <code>useSyncExternalStore</code>, about 200 lines. Replaceable: a Vue, Svelte or vanilla binding is additive rather than a rewrite.</div>
+    </div>
+    <div class="flowdir">↓ versioned subscriptions</div>
+    <div class="layer core">
+      <div class="nm">Core</div>
+      <div class="bd">Pure JS, zero dependencies, node-testable with no DOM. <code>model</code> · <code>tx</code> · <code>selection</code> · <code>history</code> · <code>view</code> · <code>registry</code> · <code>store</code></div>
+    </div>
+  </div>
+
+  <div class="codecap">Source tree</div>
+<pre><code>src/
+  core/     model.js tx.js selection.js history.js view.js registry.js store.js
+  react/    index.js                       <span class="c"># useEditor, &lt;Blocks&gt;, useBlock</span>
+  blocks/   paragraph/ heading/ list/ todo/ quote/ divider/
+            code/ table/ math/ chart/ embed/ image/
+  marks/    bold.js italic.js strike.js inlineCode.js link.js
+  ui/       slash/ toolbar/ dnd/ emoji/     + *.module.css
+  ai/       diff.js pending.js
+  config/   defineConfig.js schema.js       <span class="c"># joi — build/CLI only</span>
+cli/        index.js
+test/       core/ blocks/ perf/
+docs/</code></pre>
+
+  <p>Distribution is a <strong>single package with subpath exports</strong> — the tree-shaking and import ergonomics of a monorepo, with one version, one changelog, and no workspace tooling.</p>
+
+<pre><code><span class="k">import</span> { Editor } <span class="k">from</span> '@verbal/editor';
+<span class="k">import</span> table <span class="k">from</span> '@verbal/editor/blocks/table';
+<span class="k">import</span> code  <span class="k">from</span> '@verbal/editor/blocks/code';
+
+<span class="k">new</span> Editor({ blocks: [table, code] });   <span class="c">// you pay only for what you import</span></code></pre>
+
+  <h3 id="hld-model"><span class="sec">3.3</span>Data model</h3>
+  <p>A flat map plus child-order arrays, not a nested tree. Flat gives O(1) block lookup, ids that stay stable across moves, transactions that address a single block, and a payload that stays cheap to diff and patch as documents grow.</p>
+
+<pre><code>{
+  "version": 1,
+  "root": "doc",
+  "blocks": {
+    "doc": { "type": "doc", "children": ["b_1", "b_2"] },
+
+    "b_1": { "type": "heading", "props": { "level": 1 },
+             "content": [{ "text": "Ship it", "marks": [] }] },
+
+    "b_2": { "type": "paragraph", "children": ["b_3"],
+             "content": [
+               { "text": "See ", "marks": [] },
+               { "text": "the docs", "marks": [{ "type": "link", "href": "/docs" }] }
+             ] }
+  }
+}</code></pre>
+
+  <p><code>content</code> is an inline <strong>run array</strong>, Notion's shape — marks live on runs rather than as nested nodes, so there is no mark tree to normalise. <code>children</code> handles all nesting, so toggle lists, nested bullets and column layout share one mechanism instead of three.</p>
+
+  <h3 id="hld-tx"><span class="sec">3.4</span>Transaction model</h3>
+  <p>Every operation carries the data needed to reverse it. Undo requires that regardless, so the collaboration-ready property costs nothing today.</p>
+
+<pre><code>{ op: 'insertText',  block: 'b_1', at: 7, text: 'now' }
+{ op: 'deleteText',  block: 'b_1', at: 7, len: 3, text: 'now' }   <span class="c">// text kept for invert</span>
+{ op: 'setProps',    block: 'b_3', props: { checked: true }, prev: { checked: false } }
+{ op: 'addMark',     block: 'b_1', from: 0, to: 4, mark: { type: 'bold' } }
+{ op: 'insertBlock', parent: 'doc', index: 2, block: { <span class="c">/* … */</span> } }
+{ op: 'moveBlock',   block: 'b_3', from: ['doc', 2], to: ['b_2', 0] }
+
+invert(tx)          <span class="c">// → undo.          required now</span>
+rebase(tx, other)   <span class="c">// → collaboration. additive later, no redesign</span></code></pre>
+
+  <h3 id="hld-render"><span class="sec">3.5</span>Rendering model</h3>
+  <p>"Zero re-renders" cannot mean zero renders — mounting is a render. The enforceable definition, which becomes a CI gate rather than a claim:</p>
+  <ul class="plain">
+    <li><strong>0</strong> React renders per keystroke — typing, deleting, selecting, formatting.</li>
+    <li><strong>Exactly 1</strong> render, for the affected block only, on a structural change.</li>
+    <li><strong>0</strong> renders for every other block in the document.</li>
+  </ul>
+  <p>It works because the store exposes two notification paths and text edits use neither.</p>
+
+  <div class="codecap">core/store.js</div>
+<pre><code><span class="k">const</span> versions = <span class="k">new</span> Map();   <span class="c">// blockId → int</span>
+<span class="k">const</span> subs     = <span class="k">new</span> Map();   <span class="c">// blockId → Set&lt;fn&gt;</span>
+
+<span class="k">export const</span> bump = (id) =&gt; {                <span class="c">// structural / prop change only</span>
+  versions.set(id, (versions.get(id) ?? 0) + 1);
+  subs.get(id)?.forEach((fn) =&gt; fn());
+};
+<span class="k">export const</span> silent = () =&gt; {};              <span class="c">// text edit: model updated, nobody told</span></code></pre>
+
+  <div class="codecap">react/index.js — a block subscribes to its own version and nothing else</div>
+<pre><code><span class="k">export function</span> useBlock(id) {
+  <span class="k">const</span> subscribe = useCallback((cb) =&gt; store.subscribe(id, cb), [id]);
+  <span class="k">const</span> version   = useSyncExternalStore(subscribe, () =&gt; store.version(id));
+  <span class="k">return</span> useMemo(() =&gt; store.get(id), [id, version]);
+}</code></pre>
+
+  <div class="note">
+    <span class="lbl">Why this holds</span>
+    <p>Typing never calls <code>bump</code>, so <code>version</code> never changes, so React is never told anything happened — and the DOM is already correct, because the browser wrote it.</p>
+  </div>
+
+  <h3 id="hld-contract"><span class="sec">3.6</span>Module contract</h3>
+  <p>Core ships knowing exactly one block type: <code>paragraph</code>. Everything else, headings included, arrives through this interface. It is what keeps core small while the feature list is long, and it is the entire surface a contributor has to learn.</p>
+
+  <div class="codecap">blocks/heading/index.js</div>
+<pre><code><span class="k">export default</span> {
+  type: 'heading',
+  schema: { props: { level: [1, 2, 3] }, content: 'inline' },
+
+  create: (props = {}) =&gt; ({ type: 'heading', props: { level: 1, ...props }, content: [] }),
+
+  view: {
+    create: (block) =&gt; document.createElement(`h${block.props.level}`),
+    patch:  (el, block, prev) =&gt;
+      block.props.level !== prev.props.level ? <span class="k">null</span> : el,   <span class="c">// null ⇒ recreate node</span>
+  },
+
+  commands: {
+    setLevel: (level) =&gt; (tx, blockId) =&gt; tx.setProps(blockId, { level }),
+  },
+
+  input: {
+    markdown:  [[/^(#{1,3})\s$/, (m) =&gt; ({ type: 'heading', props: { level: m[1].length } })]],
+    shortcuts: { 'Mod-Alt-1': 'setLevel(1)' },
+  },
+
+  slash:     { label: 'Heading 1', keywords: ['h1', 'title'], icon: 'H1' },
+  parse:     { tags: ['h1', 'h2', 'h3'], markdown: /^(#{1,3})\s+(.*)$/ },
+  serialize: { markdown: (b) =&gt; '#'.repeat(b.props.level) + ' ' + inline(b.content) },
+};</code></pre>
+
+  <p>A module folder is self-contained, and is the unit of work, review, documentation and size budget:</p>
+<pre><code>blocks/heading/
+  index.js  schema.js  parse.js  serialize.js  view.js
+  heading.module.css  index.test.js</code></pre>
+
+  <h3 id="hld-flows"><span class="sec">3.7</span>Key flows</h3>
+
+  <h4>Keystroke — the hot path</h4>
+  <p><code>beforeinput</code> fires → <code>insertText</code> → return immediately, no <code>preventDefault</code> → the browser inserts the character → <code>input</code> fires → <code>syncFromDom</code> updates the model silently. <strong>Zero DOM writes, zero renders.</strong></p>
+
+  <div class="codecap">core/view.js</div>
+<pre><code>host.addEventListener('beforeinput', (e) =&gt; {
+  <span class="k">switch</span> (e.inputType) {
+    <span class="k">case</span> 'insertText':
+    <span class="k">case</span> 'deleteContentBackward':
+      <span class="k">return</span>;                                     <span class="c">// browser is right. do nothing.</span>
+    <span class="k">case</span> 'insertParagraph':
+      e.preventDefault();
+      <span class="k">return</span> editor.dispatch(splitBlock(e.getTargetRanges()[0]));
+    <span class="k">case</span> 'insertFromPaste':
+      e.preventDefault();
+      <span class="k">return</span> editor.dispatch(parsePaste(e.dataTransfer));
+    <span class="k">default</span>:
+      e.preventDefault();                           <span class="c">// unknown inputType never mutates</span>
+  }
+});</code></pre>
+
+  <p><code>InputEvent.getTargetRanges()</code> supplies the exact ranges about to be affected <em>before</em> the mutation happens, which is what makes interception deterministic rather than inferred.</p>
+
+  <h4>Enter</h4>
+  <p><code>insertParagraph</code> → prevented → <code>splitBlock</code> transaction → two <code>bump</code> calls → one render for the split block, one for the new one. Everything else in the document is untouched.</p>
+
+  <h4>Paste</h4>
+  <p><code>insertFromPaste</code> → prevented → HTML and markdown parsed through each module's <code>parse</code> rules → sanitised → one <code>insertBlock</code> transaction. Raw HTML is never injected.</p>
+
+  <h4>AI edit</h4>
+  <p>The model response is built as a valid but <strong>uncommitted</strong> transaction, word-diffed against current content, and the hunks are painted with the Custom Highlight API over the real text. The document is untouched until accept; accept dispatches through the normal path, so an AI edit is undoable exactly like a typed one.</p>
+
+  <div class="codecap">ai/pending.js</div>
+<pre><code><span class="k">const</span> pending = buildTx(aiResponse);                 <span class="c">// valid tx, not applied</span>
+<span class="k">const</span> hunks   = diffWords(current, pending.preview());
+
+accept(pending);   <span class="c">// → editor.dispatch(pending) → ordinary undo applies</span>
+reject(pending);   <span class="c">// → discard. model never knew.</span></code></pre>
+
+  <h4>Drag</h4>
+  <p>Pointer Events track the block, a transform-based indicator shows the drop position, and release dispatches one <code>moveBlock</code> transaction.</p>
+
+  <h3 id="hld-platform"><span class="sec">3.8</span>Platform dependencies</h3>
+  <p>The design deliberately depends on these. Each replaces a library the field treats as mandatory — which is where the weight budget actually comes from.</p>
+  <div class="tw"><table>
+    <thead><tr><th style="width:250px">Platform feature</th><th>Replaces</th><th style="width:250px">Availability</th></tr></thead>
+    <tbody>
+      <tr><td class="feat">CSS Custom Highlight API</td><td>Prism, highlight.js, Shiki — and the DOM a diff view would otherwise need</td><td>Chrome 105, Safari 17.2, Firefox 140 — full coverage</td></tr>
+      <tr><td class="feat">MathML Core</td><td>KaTeX, ~75KB gz plus fonts</td><td>Chrome 109 via Igalia; Gecko and WebKit earlier</td></tr>
+      <tr><td class="feat"><code>beforeinput</code> + <code>getTargetRanges()</code></td><td>An editor framework's entire input layer</td><td>All modern engines</td></tr>
+      <tr><td class="feat"><code>useSyncExternalStore</code></td><td>Redux, Zustand, Jotai</td><td>React 18+</td></tr>
+      <tr><td class="feat">Pointer Events</td><td>dnd-kit, react-dnd</td><td>All modern engines</td></tr>
+      <tr><td class="feat">Native <code>&lt;dialog&gt;</code>, <code>&lt;details&gt;</code>, custom properties</td><td>UI primitive libraries</td><td>All modern engines</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="hld-cross"><span class="sec">3.9</span>Cross-cutting design</h3>
+
+  <h4>Validation</h4>
+  <p>Joi runs at trust boundaries only — document import, paste ingest, plugin config, the CLI config file, and the self-hosted server API. It is 56KB gzipped, five times Oat UI's entire library, and it never enters the client bundle. The editing path uses the plain <code>schema</code> object each module already declares.</p>
+
+  <h4>Styling</h4>
+  <p>Oat UI's method, not only its size: semantic tags styled contextually, so blocks render as <code>&lt;h1&gt;</code>, <code>&lt;blockquote&gt;</code>, <code>&lt;ul&gt;</code>, <code>&lt;table&gt;</code>, <code>&lt;code&gt;</code> with no class attribute in the common case. <code>.module.css</code> is colocated per module — scoped, dead-CSS-detectable, tree-shaken with its module. A single <code>tokens.css</code> of custom properties is the entire public theming API, with an automatic dark scheme.</p>
+
+  <h4>Testing strategy</h4>
+  <p>Two tools, for a technical reason rather than an aesthetic one. <code>node:test</code> covers <code>core/</code>: it is pure JS with no DOM, so the full model, transaction, history and selection surface runs with no environment and no dependency. Playwright covers view, blocks and performance.</p>
+  <div class="note">
+    <span class="lbl">Why not jsdom</span>
+    <p>jsdom implements neither <code>getTargetRanges()</code> nor a real Selection and Range model. Testing a <code>contenteditable</code> editor there would test the mock on precisely the behaviour that matters — so the DOM suite runs in real browsers across three engines, or it does not run.</p>
+  </div>
+
+  <div class="codecap">test/perf/renders.spec.js — the gate that makes G-4 real</div>
+<pre><code>test('typing causes zero react renders', <span class="k">async</span> ({ page }) =&gt; {
+  <span class="k">await</span> page.goto('/bench');
+  <span class="k">await</span> page.evaluate(() =&gt; (window.__renders = 0));
+  <span class="k">await</span> page.keyboard.type('the quick brown fox jumps over the lazy dog');
+  expect(<span class="k">await</span> page.evaluate(() =&gt; window.__renders)).toBe(0);
+});</code></pre>
+
+  <h4>Size enforcement</h4>
+  <p>About fifteen lines over <code>zlib.gzipSync</code> against a budget JSON. <code>size-limit</code> would be a dependency for something the standard library already does. It runs in the pre-commit hook and in CI, and it fails the build rather than warning.</p>
+
+  <h4>Pre-commit</h4>
+  <p>Git's own <code>core.hooksPath</code> pointed at a committed <code>.githooks/</code> directory — no Husky, no <code>node_modules</code> indirection. The hook runs lint-on-staged, <code>node --test test/core</code>, and the size script. Playwright runs in CI only: a hook slow enough to be bypassed is a hook that does nothing.</p>
+
+  <h4>Build and distribution</h4>
+  <p>Vite library mode, ESM only, one entry per module, <code>package.json#exports</code> for subpaths, types generated from JSDoc, provenance-signed publish.</p>
+
+  <h3 id="hld-decisions"><span class="sec">3.10</span>Decision log</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:44px">#</th><th style="width:230px">Decision</th><th style="width:190px">Rejected</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr><td class="id">D-1</td><td class="feat">Framework-free core,<br>React as a thin binding</td><td><s>React throughout</s></td><td>Core is node-testable with no DOM, zero re-renders becomes structurally achievable, and other bindings become additive.</td></tr>
+      <tr><td class="id">D-2</td><td class="feat">Per-block contenteditable</td><td><s>One document-wide host</s></td><td>Non-text blocks need no cursor logic at all, and a broken block cannot corrupt the document.</td></tr>
+      <tr><td class="id">D-3</td><td class="feat">Pass <code>insertText</code> through untouched</td><td><s>Intercept every keystroke</s></td><td>The browser is already correct. This <em>is</em> the zero-re-render mechanism.</td></tr>
+      <tr><td class="id">D-4</td><td class="feat">Flat block map</td><td><s>Nested tree</s></td><td>O(1) lookup, ids stable across moves, single-block transactions, cheap diffs at scale.</td></tr>
+      <tr><td class="id">D-5</td><td class="feat">Joi at boundaries only</td><td><s>Joi everywhere</s></td><td>56KB gz is five times Oat UI's entire library — it would be the bundle floor before a single feature exists.</td></tr>
+      <tr><td class="id">D-6</td><td class="feat">Single package,<br>subpath exports</td><td><s>Monorepo, package per module</s></td><td>Same tree-shaking, one version and one changelog, no workspace tooling.</td></tr>
+      <tr><td class="id">D-7</td><td class="feat">Collab-ready transactions,<br>collab unbuilt</td><td><s>Snapshot undo, or build a CRDT now</s></td><td>Invertible ops are required for undo anyway; retrofitting them later is a rewrite.</td></tr>
+      <tr><td class="id">D-8</td><td class="feat">CSS Custom Highlight API</td><td><s>Token <code>&lt;span&gt;</code>s</s></td><td>Zero DOM nodes in the editable region removes the whole cursor-corruption class.</td></tr>
+      <tr><td class="id">D-9</td><td class="feat">LaTeX → MathML</td><td><s>KaTeX / MathJax</s></td><td>A ~5KB compiler against a ~75KB gz renderer plus fonts, for native rendering.</td></tr>
+      <tr><td class="id">D-10</td><td class="feat">Pointer Events for drag</td><td><s>HTML5 drag-and-drop</s></td><td>Native DnD gives uncontrollable ghost images and no fine-grained drop targeting.</td></tr>
+      <tr><td class="id">D-11</td><td class="feat">Playwright for DOM tests</td><td><s>jsdom + RTL</s></td><td>jsdom lacks <code>getTargetRanges()</code> and real Selection — it would test the mock.</td></tr>
+      <tr><td class="id">D-12</td><td class="feat">DOM surgery for marks</td><td><s><code>document.execCommand</code></s></td><td><code>execCommand</code> produces non-deterministic markup across browsers.</td></tr>
+      <tr><td class="id">D-13</td><td class="feat">AI output as an<br>uncommitted transaction</td><td><s>Apply, then diff against history</s></td><td>The model is never polluted, reject is byte-identical, and accept reuses the normal undo path.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>
+  <span class="lbl">Sources</span>
+  <p><a href="https://oat.ink/">Oat UI</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Custom_highlight_API">MDN — CSS Custom Highlight API</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/beforeinput_event">MDN — beforeinput</a> · <a href="https://webkit.org/blog/7358/enhanced-editing-with-input-events/">WebKit — Enhanced Editing with Input Events</a> · <a href="https://mathml.igalia.com/">MathML in Web Browsers, Igalia</a> · <a href="https://react.dev/reference/react/useSyncExternalStore">React — useSyncExternalStore</a> · <a href="https://developer.wordpress.org/block-editor/explanations/architecture/">WordPress Block Editor Architecture</a> · <a href="https://editorjs.io/">Editor.js</a></p>
+</footer>
+
+</main>
+</div>
+</div>

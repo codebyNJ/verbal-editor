@@ -1,0 +1,23 @@
+.chart figure { margin: 8px 0; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart rect, .chart path, .chart polygon { transform-box: fill-box; transform-origin: bottom; animation: grow var(--v-dur-3) var(--v-spring) both; }
+.chart path { transform-origin: center; }
+@keyframes grow { from { scale: 1 0; opacity: 0; } }
+.chart .c1 { fill: var(--v-chart-1); stroke: var(--v-chart-1); }
+.chart .c2 { fill: var(--v-chart-2); stroke: var(--v-chart-2); }
+.chart .c3 { fill: var(--v-chart-3); stroke: var(--v-chart-3); }
+.chart .c4 { fill: var(--v-chart-4); stroke: var(--v-chart-4); }
+.chart path { stroke: var(--v-bg); stroke-width: 2; }
+.line { fill: none !important; stroke-width: 2.5; stroke-linejoin: round; }
+.fill { opacity: .18; stroke: none !important; }
+.chart line { stroke: var(--v-border); }
+.chart text { fill: var(--v-fg-muted); font: 12px var(--v-font); text-anchor: middle; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 6px; font-size: 13px; color: var(--v-fg-muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; margin-right: 6px; border-radius: 3px; background: currentColor; }
+.legend .c1 { color: var(--v-chart-1); } .legend .c2 { color: var(--v-chart-2); } .legend .c3 { color: var(--v-chart-3); } .legend .c4 { color: var(--v-chart-4); }
+.legend span { color: var(--v-fg-muted); }
+.chart figcaption { display: flex; justify-content: flex-end; }
+.chart select { border: 0; border-radius: var(--v-radius); background: none; color: var(--v-fg-muted); font: 12px var(--v-font); cursor: pointer; text-transform: capitalize; }
+.empty { color: var(--v-fg-muted); font-size: 14px; }
+@media (pointer: coarse) { .chart select { min-height: 44px; font-size: 16px; } }
+:global([data-readonly]) .chart select { display: none; }

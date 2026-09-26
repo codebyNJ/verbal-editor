@@ -1,0 +1,60 @@
+/* Verbal theming API: every visual value is one of these properties. */
+:root {
+  color-scheme: light dark;
+
+  --v-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  --v-font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --v-text: 16px;
+  --v-leading: 1.6;
+
+  --v-bg: light-dark(#fff, #191919);
+  --v-bg-soft: light-dark(#f7f7f5, #202020);
+  --v-bg-raised: light-dark(#fff, #252525);
+  --v-hover: light-dark(rgb(55 53 47 / .06), rgb(255 255 255 / .055));
+  --v-press: light-dark(rgb(55 53 47 / .1), rgb(255 255 255 / .09));
+  --v-fg: light-dark(#1f1f1d, #e8e7e4);
+  --v-fg-muted: light-dark(#787774, #9b9a97);
+  --v-fg-faint: light-dark(#b9b8b4, #5f5e5b);
+  --v-border: light-dark(rgb(55 53 47 / .1), rgb(255 255 255 / .09));
+  --v-accent: light-dark(#2383e2, #4a9ee8);
+  --v-accent-fg: #fff;
+  --v-accent-soft: color-mix(in srgb, var(--v-accent) 14%, transparent);
+  --v-selected: color-mix(in srgb, var(--v-accent) 16%, transparent);
+  --v-danger: light-dark(#d44c47, #e8645f);
+  --v-success: light-dark(#448361, #58a57a);
+  --v-code-bg: light-dark(#f6f6f4, #232323);
+  --v-inline-code: light-dark(#eb5757, #ff7b72);
+
+  --v-syn-keyword: light-dark(#a626a4, #c678dd);
+  --v-syn-string: light-dark(#50a14f, #98c379);
+  --v-syn-comment: light-dark(#a0a1a7, #7f848e);
+  --v-syn-number: light-dark(#986801, #d19a66);
+  --v-syn-function: light-dark(#4078f2, #61afef);
+  --v-syn-type: light-dark(#c18401, #e5c07b);
+  --v-syn-tag: light-dark(#e45649, #e06c75);
+
+  --v-chart-1: var(--v-accent);
+  --v-chart-2: light-dark(#e07a3a, #f0955a);
+  --v-chart-3: light-dark(#4aa37a, #5cc08f);
+  --v-chart-4: light-dark(#9b6bd6, #b48ae8);
+
+  --v-radius: 6px;
+  --v-radius-lg: 12px;
+  --v-space: 4px;
+  --v-shadow: 0 0 0 1px var(--v-border), 0 2px 4px rgb(15 15 15 / .04), 0 8px 24px rgb(15 15 15 / .08);
+  --v-shadow-lg: 0 0 0 1px var(--v-border), 0 4px 8px rgb(15 15 15 / .06), 0 24px 64px rgb(15 15 15 / .16);
+  --v-blur: saturate(180%) blur(20px);
+
+  --v-dur-1: 150ms;
+  --v-dur-2: 220ms;
+  --v-dur-3: 300ms;
+  --v-ease: cubic-bezier(.2, .8, .2, 1);
+  --v-spring: linear(0, .064, .209, .384, .555, .704, .823, .911, .972, 1.009, 1.03, 1.038, 1.038, 1.033, 1.027, 1.02, 1.014, 1.009, 1);
+}
+
+[data-theme="light"] { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --v-dur-1: 0s; --v-dur-2: 0s; --v-dur-3: 0s; }
+}

@@ -1,0 +1,51 @@
+{
+  "name": "@verbal/editor",
+  "version": "0.1.0",
+  "description": "Notion-style block editor with zero runtime dependencies and zero React re-renders while typing.",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": { "types": "./dist/types/index.d.ts", "default": "./dist/index.js" },
+    "./preset": { "types": "./dist/types/preset.d.ts", "default": "./dist/preset.js" },
+    "./react": { "types": "./dist/types/react/index.d.ts", "default": "./dist/react.js" },
+    "./dom": { "types": "./dist/types/dom/index.d.ts", "default": "./dist/dom.js" },
+    "./blocks/*": { "types": "./dist/types/blocks/*/index.d.ts", "default": "./dist/blocks/*.js" },
+    "./marks/*": { "types": "./dist/types/marks/*.d.ts", "default": "./dist/marks/*.js" },
+    "./ui/*": { "types": "./dist/types/ui/*/index.d.ts", "default": "./dist/ui/*.js" },
+    "./ai/*": { "types": "./dist/types/ai/*.d.ts", "default": "./dist/ai/*.js" },
+    "./config": { "types": "./dist/types/config/defineConfig.d.ts", "default": "./dist/node/config.js" },
+    "./server": { "types": "./dist/types/server/index.d.ts", "default": "./dist/node/server.js" },
+    "./tokens.css": "./dist/tokens.css"
+  },
+  "files": ["dist", "cli", "AGENTS.md"],
+  "sideEffects": ["**/*.css"],
+  "bin": { "verbal": "./cli/index.js" },
+  "scripts": {
+    "dev": "vite",
+    "dev:dist": "VERBAL_DIST=1 vite",
+    "build": "vite build && vite build --mode node && npm run types",
+    "site": "vite build --mode site",
+    "site:preview": "vite preview --mode site",
+    "types": "tsc --allowJs --declaration --emitDeclarationOnly --stripInternal --noCheck --skipLibCheck --target esnext --module nodenext --moduleResolution nodenext --rootDir src --outDir dist/types src/index.js src/preset.js src/react/index.js src/dom/index.js src/config/defineConfig.js src/server/index.js src/blocks/*/index.js src/marks/*.js src/ui/*/index.js src/ai/*.js",
+    "test": "node --test test/unit/*.test.js",
+    "check": "node scripts/check.js",
+    "e2e": "playwright test"
+  },
+  "peerDependencies": {
+    "joi": ">=17",
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "joi": { "optional": true },
+    "react": { "optional": true }
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63",
+    "@vitejs/plugin-react": "^6.1.1",
+    "joi": "^18.2.9",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.1"
+  }
+}

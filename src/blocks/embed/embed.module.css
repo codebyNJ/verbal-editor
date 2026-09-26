@@ -1,0 +1,22 @@
+.embed { margin: 8px 0; }
+.embed input { box-sizing: border-box; width: 100%; padding: 10px 12px; border: 0; border-radius: var(--v-radius); background: var(--v-bg-soft); color: var(--v-fg); font: 14px var(--v-font); outline: none; }
+.embed iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: var(--v-radius-lg); }
+.facade {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: var(--v-radius-lg);
+  background: linear-gradient(135deg, var(--v-bg-soft), var(--v-press));
+  color: var(--v-fg);
+  font: 600 15px var(--v-font);
+  cursor: pointer;
+  transition: scale var(--v-dur-2) var(--v-spring);
+}
+.facade:hover { scale: 1.01; }
+.card { display: grid; gap: 2px; padding: 12px 14px; border-radius: var(--v-radius); box-shadow: inset 0 0 0 1px var(--v-border); color: inherit; text-decoration: none; transition: background var(--v-dur-1) var(--v-ease); }
+.card:hover { background: var(--v-hover); }
+.card span { overflow: hidden; color: var(--v-fg-muted); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+@media (pointer: coarse) { .embed input { min-height: 44px; font-size: 16px; } }
+:global([data-readonly]) .embed input { display: none; }

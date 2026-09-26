@@ -1,0 +1,36 @@
+::highlight(verbal-del) { color: var(--v-danger); background-color: color-mix(in srgb, var(--v-danger) 14%, transparent); text-decoration: line-through; }
+::highlight(verbal-ins) { color: var(--v-success); background-color: color-mix(in srgb, var(--v-success) 18%, transparent); }
+.panel {
+  margin: 4px 0 10px;
+  padding: 10px 12px;
+  border-radius: var(--v-radius-lg);
+  background: var(--v-bg-raised);
+  box-shadow: var(--v-shadow);
+  white-space: pre-wrap;
+  transform-origin: top left;
+  animation: grow var(--v-dur-3) var(--v-spring);
+}
+@keyframes grow { from { opacity: 0; scale: .97; } }
+.panel footer { display: flex; align-items: center; gap: 6px; margin-top: 10px; color: var(--v-fg-muted); font-size: 12px; }
+.panel footer span { margin-right: auto; }
+.panel button {
+  padding: 3px 8px;
+  border: 0;
+  border-radius: var(--v-radius);
+  background: var(--v-hover);
+  color: var(--v-fg);
+  font: 500 12px var(--v-font);
+  cursor: pointer;
+  transition: background var(--v-dur-1) var(--v-ease), scale var(--v-dur-1) var(--v-ease);
+}
+.panel button:hover { background: var(--v-press); }
+.panel button:active { scale: .95; }
+.panel footer button:first-of-type { background: var(--v-accent); color: var(--v-accent-fg); }
+.panel kbd { opacity: .6; font: inherit; }
+.hunk { display: inline-flex; gap: 2px; margin: 0 4px; vertical-align: 1px; }
+.hunk button { padding: 0 5px; line-height: 18px; }
+@media (pointer: coarse) {
+  .hunk button { position: relative; }
+  .hunk button::before { content: ""; position: absolute; inset: -13px -10px; }
+  .panel footer button { min-height: 44px; }
+}

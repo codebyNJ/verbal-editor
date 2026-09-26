@@ -1,0 +1,88 @@
+/* The playground: an editor in a device frame, and an inspector beside it. */
+.playground { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: start; }
+.playground > * { min-width: 0; }
+.stage { min-width: 0; overflow-x: auto; }
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+.segments { display: inline-flex; padding: 2px; border-radius: 10px; background: var(--v-hover); }
+.segments button, .button, .icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--v-fg-muted);
+  font: 500 13px var(--v-font);
+  cursor: pointer;
+}
+.segments button[aria-checked="true"] { background: var(--v-bg-raised); color: var(--v-fg); box-shadow: var(--v-shadow); }
+.button { box-shadow: inset 0 0 0 1px var(--v-border); }
+.button:hover, .icon:hover { background: var(--v-hover); color: var(--v-fg); }
+.primary { margin-left: auto; background: var(--v-accent); color: var(--v-accent-fg); box-shadow: none; }
+.primary:hover { background: var(--v-accent); color: var(--v-accent-fg); filter: brightness(1.06); }
+.icon { padding: 0 8px; }
+.note { margin: 0 0 12px; color: var(--v-fg-muted); font-size: 14px; }
+.device {
+  width: var(--width);
+  min-height: 420px;
+  margin: 0 auto;
+  padding: 16px 20px 40px;
+  box-sizing: border-box;
+  border: 1px solid var(--v-border);
+  border-radius: 16px;
+  background: var(--v-bg);
+  transition: max-width var(--v-dur-3) var(--v-ease);
+}
+.device[data-frame="390"] { border-radius: 28px; }
+
+.inspector {
+  position: sticky;
+  top: 12px;
+  display: grid;
+  gap: 16px;
+  max-height: calc(100dvh - 72px);
+  overflow: auto;
+  padding: 16px;
+  box-sizing: border-box;
+  border: 1px solid var(--v-border);
+  border-radius: 16px;
+  background: var(--v-bg-soft);
+  font-size: 13px;
+}
+.inspector > * { min-width: 0; }
+.inspector h2 { margin: 0 0 8px; color: var(--v-fg); font: 600 13px var(--v-font); }
+.inspector fieldset { min-width: 0; margin: 0 0 8px; padding: 0; border: 0; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 12px; }
+.inspector legend { margin-bottom: 4px; color: var(--v-fg-muted); font-size: 12px; }
+.inspector label { display: flex; align-items: center; gap: 6px; min-width: 0; padding: 3px 0; color: var(--v-fg); cursor: pointer; }
+.inspector label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.inspector label small { margin-left: auto; color: var(--v-fg-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.inspector input { accent-color: var(--v-accent); }
+.size { margin: 0; color: var(--v-fg-muted); }
+.size strong { color: var(--v-fg); font-size: 18px; }
+.size small { display: block; margin-top: 2px; color: var(--v-fg-muted); }
+.head { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.head h2 { margin: 0 auto 0 0; }
+.code {
+  max-height: 260px;
+  margin: 0;
+  padding: 12px;
+  overflow: auto;
+  border-radius: 10px;
+  background: var(--v-code-bg);
+  color: var(--v-fg);
+  font: 12px/1.55 var(--v-font-mono);
+  white-space: pre;
+}
+
+@media (max-width: 1100px) {
+  .playground { grid-template-columns: 1fr; }
+  .inspector { position: static; max-height: none; }
+}
+@media (pointer: coarse) {
+  .segments button, .button, .icon { min-height: 44px; }
+  .icon { min-width: 44px; justify-content: center; }
+  .inspector label { min-height: 44px; }
+}

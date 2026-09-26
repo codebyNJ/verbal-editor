@@ -1,0 +1,53 @@
+.math > div { padding: 10px 0; text-align: center; cursor: pointer; border-radius: var(--v-radius); transition: background var(--v-dur-1) var(--v-ease); }
+.math > div:hover { background: var(--v-hover); }
+.math math { font-size: 1.15em; }
+.empty { color: var(--v-fg-faint); font-size: 14px; }
+.error { margin: 6px 0 0; color: var(--v-danger); font: 12px var(--v-font-mono); }
+.pop {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  width: min(420px, calc(100vw - 16px));
+  padding: 8px;
+  border: 0;
+  border-radius: var(--v-radius-lg);
+  background: var(--v-bg-raised);
+  box-shadow: var(--v-shadow-lg);
+  color: var(--v-fg);
+  transform-origin: top;
+  animation: pop var(--v-dur-2) var(--v-spring);
+}
+@keyframes pop { from { opacity: 0; scale: .96; } }
+.pop textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px;
+  border: 0;
+  border-radius: var(--v-radius);
+  outline: none;
+  resize: vertical;
+  background: var(--v-code-bg);
+  color: var(--v-fg);
+  font: 13px / 1.5 var(--v-font-mono);
+}
+.pop button {
+  display: block;
+  margin: 6px 0 0 auto;
+  padding: 4px 10px;
+  border: 0;
+  border-radius: var(--v-radius);
+  background: var(--v-accent);
+  color: var(--v-accent-fg);
+  font: 500 12px var(--v-font);
+  cursor: pointer;
+}
+.inline { padding: 0 2px; border-radius: 4px; }
+.inline:not(.editing) { font-size: 0; }
+.inline > [data-skip] { font-size: var(--v-text); }
+.editing { background: var(--v-code-bg); font-family: var(--v-font-mono); font-size: .88em; }
+.editing > [data-skip] { display: none; }
+@media (pointer: coarse) {
+  .pop textarea { font-size: 16px; }
+  .pop button { min-height: 44px; }
+}
+:global([data-readonly]) .math > div { pointer-events: none; }

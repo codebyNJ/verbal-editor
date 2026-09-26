@@ -1,0 +1,31 @@
+:where([data-verbal]) {
+  container-type: inline-size;
+  outline: none;
+  font: var(--v-text) / var(--v-leading) var(--v-font);
+  color: var(--v-fg);
+}
+:where([data-verbal] [data-block]) { position: relative; margin: 1px 0; border-radius: var(--v-radius); transition: background var(--v-dur-1) var(--v-ease); }
+:where([data-verbal] [data-children]) { padding-left: 1.6em; }
+:where([data-verbal] [data-selected]) { background: var(--v-selected); }
+:where([data-verbal] [data-content]) {
+  margin: 0;
+  padding: 3px 2px;
+  outline: none;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+.paragraph > [data-content]:empty:focus::before,
+:where([data-verbal] [data-placeholder]:not(p):empty)::before {
+  content: attr(data-placeholder);
+  color: var(--v-fg-faint);
+  pointer-events: none;
+}
+:where([data-verbal] strong) { font-weight: 600; }
+:where([data-verbal] a) { color: inherit; text-decoration: underline; text-decoration-color: var(--v-fg-faint); text-underline-offset: 2px; }
+:where([data-verbal] [data-content] code) {
+  padding: .15em .35em;
+  border-radius: 4px;
+  background: var(--v-code-bg);
+  color: var(--v-inline-code);
+  font: .86em var(--v-font-mono);
+}
