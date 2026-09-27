@@ -4,6 +4,7 @@ import preset from '@verbal/editor/preset';
 import { Blocks, useEditor } from '@verbal/editor/react';
 import sizes from 'virtual:sizes';
 import journal from 'virtual:journal';
+import { faq } from './faq.js';
 import bench from '../bench/results.json';
 import s from './Landing.module.css';
 
@@ -262,15 +263,7 @@ const features = [
   ['Ship', 'Pay for what you list', 'Every block, mark and menu is its own import with its own CSS. The CLI reports what each one weighs.', '#/docs/choosing-modules', 'What each module weighs', 'summit', 105, 70],
 ];
 
-const faq = [
-  ['How big is it?', `The core is ${kb(sizes.core)} KB of JavaScript, gzipped; every module together is ${kb(sizes.preset)} KB. You import only the modules you use.`, '#/docs/choosing-modules', 'Choosing modules'],
-  ['Which frameworks does it work with?', 'React through the <Blocks> binding, and anything else through the DOM binding, which renders the same editor with no framework.', '#/docs/quickstart', 'Quickstart'],
-  ['Does it work with server rendering and Next.js?', 'The editor renders in the browser. In Next.js, load it in a client component with server rendering turned off; importing it on the server is safe.', '#/docs/rendering', 'Rendering model'],
-  ['Can several people edit the same document?', 'Not yet. Every change is a serializable, invertible operation, which leaves room for it, but no sync is built.', '#/docs/limitations', 'Limitations'],
-  ['Which browsers does it support?', 'Current Chrome, Safari and Firefox. The CSS Custom Highlight API sets the floor, and every release is tested in all three and on touch phones.', '#/docs/browser-support', 'Browser support'],
-  ['How does AI review work?', 'Your server returns new text for a block; Verbal shows it as a word diff over the original. Nothing changes until you accept, and an accepted edit is one undo step.', '#/docs/ai-review', 'AI review'],
-  ['What is the licence?', 'MIT. The display type on this page is League Gothic, used under the SIL Open Font License.', '#/docs/installation', 'Installation'],
-];
+const questions = faq(sizes);
 
 export default function Landing() {
   const top = useRef(null);
@@ -476,7 +469,7 @@ export default function Landing() {
             <a className={s.textLink} href="#/docs/introduction">View docs</a>
           </div>
           <div className={s.rows}>
-            {faq.map(([q, a, href, page]) => (
+            {questions.map(([q, a, href, page]) => (
               <details key={q} name="faq">
                 <summary><span>{q}</span><i aria-hidden="true" /></summary>
                 <p>{a} <a className={s.textLink} href={href}>{page}</a></p>

@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { basename, resolve, posix } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -137,6 +138,97 @@ const content = {
   },
 };
 
+/**
+ * Search, share previews and answer engines: the title and description, Open Graph and Twitter tags with absolute URLs
+ * (package.json's homepage), SoftwareApplication and FAQPage data, a text version for crawlers that run no script,
+ * and robots.txt with a sitemap of every page's Markdown. Figures come from the size build and bench/results.json.
+ */
+const seo = {
+  name: 'verbal-seo',
+  async transformIndexHtml(html) {
+    const pkg = JSON.parse(readFileSync(at('package.json'), 'utf8'));
+    const home = pkg.homepage;
+    const { measure } = await script('sizes.js');
+    const { faq } = await import(pathToFileURL(at('demo/faq.js')).href);
+    const sizes = measure();
+    const full = JSON.parse(readFileSync(at('bench/results.json'), 'utf8')).editors.filter((e) => e.setup === 'full');
+    const [verbal, tiptap] = ['verbal', 'tiptap'].map((name) => full.find((e) => e.editor === name));
+    const kb = (n) => (n / 1000).toFixed(2);
+    const title = 'Verbal — a quiet place to write';
+    const description = `A block editor for the web: ${kb(sizes.core)} KB at its core, ${(Math.round((tiptap.total / verbal.total) * 10) / 10).toFixed(1)}× smaller than Tiptap, and zero React re-renders while you type. MIT, no runtime dependencies.`;
+    // The share image (scripts/og.js); its hash in the URL makes platforms fetch it again when it changes.
+    const png = readFileSync(at('demo/public/og.png'));
+    const image = `${home}/og.png?v=${createHash('sha256').update(png).digest('hex').slice(0, 8)}`;
+    const alt = 'The Verbal landing page: “A quiet place to write”, beside a pixel-art writer and lantern.';
+    const esc = (t) => t.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    const questions = faq(sizes);
+    const data = [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareApplication',
+        name: 'Verbal',
+        alternateName: pkg.name,
+        url: `${home}/`,
+        description,
+        image,
+        applicationCategory: 'DeveloperApplication',
+        operatingSystem: 'Any (runs in the browser)',
+        softwareVersion: pkg.version,
+        license: `https://spdx.org/licenses/${pkg.license}.html`,
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: questions.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+      },
+    ];
+    const meta = (key, name, content) => `<meta ${key}="${name}" content="${esc(content)}" />`;
+    const head = [
+      `<title>${esc(title)}</title>`,
+      meta('name', 'description', description),
+      `<link rel="canonical" href="${home}/" />`,
+      meta('property', 'og:type', 'website'),
+      meta('property', 'og:site_name', 'Verbal'),
+      meta('property', 'og:url', `${home}/`),
+      meta('property', 'og:title', title),
+      meta('property', 'og:description', description),
+      meta('property', 'og:image', image),
+      meta('property', 'og:image:type', 'image/png'),
+      meta('property', 'og:image:width', String(png.readUInt32BE(16))),
+      meta('property', 'og:image:height', String(png.readUInt32BE(20))),
+      meta('property', 'og:image:alt', alt),
+      meta('name', 'twitter:card', 'summary_large_image'),
+      meta('name', 'twitter:title', title),
+      meta('name', 'twitter:description', description),
+      meta('name', 'twitter:image', image),
+      meta('name', 'twitter:image:alt', alt),
+      '<link rel="alternate" type="text/plain" href="llms.txt" title="The docs, for language models" />',
+      `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`,
+    ];
+    const text = [
+      `<h1>${esc(title)}</h1>`,
+      `<p>${esc(description)}</p>`,
+      ...questions.flatMap(([q, a]) => [`<h2>${esc(q)}</h2>`, `<p>${esc(a)}</p>`]),
+      '<p>The docs, as Markdown: <a href="llms.txt">llms.txt</a> (the index), <a href="llms-full.txt">llms-full.txt</a> (every page) and <a href="AGENTS.md">AGENTS.md</a> (for coding agents). The editor itself needs JavaScript.</p>',
+    ];
+    return html
+      .replace(/ *<!-- seo:.*-->/, head.map((t) => `    ${t}`).join('\n'))
+      .replace(/ *<!-- noscript -->/, `    <noscript>\n${text.map((t) => `      ${t}`).join('\n')}\n    </noscript>`);
+  },
+  async generateBundle() {
+    const home = JSON.parse(readFileSync(at('package.json'), 'utf8')).homepage;
+    const { content: read } = await script('content.js');
+    const pages = ['', 'llms.txt', 'llms-full.txt', 'AGENTS.md', ...(await read()).docs.map((d) => `docs/${d.slug}.md`)];
+    this.emitFile({ type: 'asset', fileName: 'robots.txt', source: `User-agent: *\nAllow: /\n\nSitemap: ${home}/sitemap.xml\n` });
+    this.emitFile({
+      type: 'asset',
+      fileName: 'sitemap.xml',
+      source: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.map((p) => `  <url><loc>${home}/${p}</loc></url>`).join('\n')}\n</urlset>\n`,
+    });
+  },
+};
+
 /** Readable, stable class names: `v-<module>-<class>`. */
 const css = { modules: { generateScopedName: (local, file) => `v-${basename(file).split('.')[0]}-${local}` } };
 
@@ -147,7 +239,7 @@ export default defineConfig(({ command, mode }) => {
       root: 'demo',
       base: './',
       css,
-      plugins: [alias(true), react(), sizes, content],
+      plugins: [alias(true), react(), sizes, content, seo],
       build: { target: 'esnext', outDir: at('site-dist'), emptyOutDir: true },
       preview: { port: 5173, strictPort: true },
     };
@@ -191,7 +283,7 @@ export default defineConfig(({ command, mode }) => {
   return {
     root: 'demo',
     css,
-    plugins: [alias(!!process.env.VERBAL_DIST), react(), sizes, content],
+    plugins: [alias(!!process.env.VERBAL_DIST), react(), sizes, content, seo],
     server: { port: 5173, strictPort: true },
   };
 });

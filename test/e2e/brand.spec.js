@@ -29,8 +29,10 @@ test('the logo is a 16px pixel grid, so it stays crisp at favicon size', () => {
 test('favicon, social image and cover come from this origin', async ({ page, request }) => {
   await page.goto('/#/play/welcome');
   const icon = await page.locator('link[rel=icon]').getAttribute('href');
-  const og = await page.locator('meta[property="og:image"]').getAttribute('content');
-  for (const [href, type] of [[icon, 'image/svg+xml'], [og, 'image/jpeg']]) {
+  // Share previews need an absolute URL: the site's own address (package.json's homepage), served from this build.
+  const og = new URL(await page.locator('meta[property="og:image"]').getAttribute('content'));
+  expect(og.origin).toBe(new URL(JSON.parse(readFileSync(join(repo, 'package.json'), 'utf8')).homepage).origin);
+  for (const [href, type] of [[icon, 'image/svg+xml'], [og.pathname + og.search, 'image/png']]) {
     const res = await request.get(new URL(href, page.url()).href);
     expect(res.ok(), href).toBe(true);
     expect(res.headers()['content-type'], href).toContain(type);
