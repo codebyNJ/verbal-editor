@@ -132,7 +132,7 @@ test('choosing a tab switches every code group that has it, and the choice is ke
   await expect(page.locator('[data-type=codegroup]').first().getByRole('tab', { name: 'pnpm' })).toHaveAttribute('aria-selected', 'true');
   await recordCopies(page);
   await page.locator('[data-type=codegroup]').first().getByRole('button', { name: 'Copy code' }).click();
-  expect(await page.evaluate(() => window.__copied[0])).toBe('pnpm add @verbal/editor');
+  expect(await page.evaluate(() => window.__copied[0])).toBe('pnpm add verbal-editor');
 });
 
 test('old addresses land on their new pages', async ({ page }) => {

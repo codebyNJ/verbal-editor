@@ -38,7 +38,7 @@ One undo turns any of these conversions back into the characters you typed.
 ## Your own keys
 
 ```js save-key.js
-import { Editor } from '@verbal/editor';
+import { Editor } from 'verbal-editor';
 
 const editor = new Editor();
 editor.on('key', ({ name }) => {

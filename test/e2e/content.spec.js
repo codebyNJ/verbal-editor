@@ -70,9 +70,9 @@ test.describe('site content', () => {
   test('code samples import only real package entries and call only real editor methods', async ({ page }) => {
     expect(samples.length).toBeGreaterThan(30);
     for (const { file, src } of samples)
-      for (const [, sub] of src.matchAll(/from '@verbal\/editor((?:\/[\w/.-]+)?)'/g)) {
+      for (const [, sub] of src.matchAll(/from 'verbal-editor((?:\/[\w/.-]+)?)'/g)) {
         const target = resolveExport(`.${sub}`);
-        expect(target && existsSync(target), `${file}: @verbal/editor${sub}`).toBe(true);
+        expect(target && existsSync(target), `${file}: verbal-editor${sub}`).toBe(true);
       }
     const used = [...new Set(samples.flatMap(({ src }) => [...src.matchAll(/\beditor\.(\w+)/g)].map((m) => m[1])))];
     await page.goto('/#/examples/welcome');
@@ -85,8 +85,8 @@ test.describe('site content', () => {
     test.setTimeout(180_000);
     const tmp = mkdtempSync(join(tmpdir(), 'verbal-samples-'));
     try {
-      mkdirSync(join(tmp, 'node_modules/@verbal'), { recursive: true });
-      symlinkSync(repo, join(tmp, 'node_modules/@verbal/editor'));
+      mkdirSync(join(tmp, 'node_modules'), { recursive: true });
+      symlinkSync(repo, join(tmp, 'node_modules/verbal-editor'));
       symlinkSync(join(repo, 'node_modules/joi'), join(tmp, 'node_modules/joi'));
       // React, React DOM and Next ship no types here; the samples need only these from them.
       const shim = (name, dts) => {

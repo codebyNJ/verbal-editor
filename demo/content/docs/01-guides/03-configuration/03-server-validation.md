@@ -7,8 +7,8 @@ icon: shield
 Loading in the browser is forgiving: an unknown block becomes a paragraph. Your API should not be. `validateDoc` checks a document against the modules you enable and rejects anything malformed — nothing is coerced or repaired.
 
 ```js api.js
-import { defineConfig } from '@verbal/editor/config';
-import { validateDoc } from '@verbal/editor/server';
+import { defineConfig } from 'verbal-editor/config';
+import { validateDoc } from 'verbal-editor/server';
 
 const config = defineConfig({ blocks: ['heading', 'list', 'table'], marks: ['bold', 'link'] });
 

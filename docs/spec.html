@@ -542,9 +542,9 @@ docs/</code></pre>
 
   <p>Distribution is a <strong>single package with subpath exports</strong> — the tree-shaking and import ergonomics of a monorepo, with one version, one changelog, and no workspace tooling.</p>
 
-<pre><code><span class="k">import</span> { Editor } <span class="k">from</span> '@verbal/editor';
-<span class="k">import</span> table <span class="k">from</span> '@verbal/editor/blocks/table';
-<span class="k">import</span> code  <span class="k">from</span> '@verbal/editor/blocks/code';
+<pre><code><span class="k">import</span> { Editor } <span class="k">from</span> 'verbal-editor';
+<span class="k">import</span> table <span class="k">from</span> 'verbal-editor/blocks/table';
+<span class="k">import</span> code  <span class="k">from</span> 'verbal-editor/blocks/code';
 
 <span class="k">new</span> Editor({ blocks: [table, code] });   <span class="c">// you pay only for what you import</span></code></pre>
 

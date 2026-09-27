@@ -8,15 +8,15 @@ Pick your setup. Each sample is a complete editor with headings, lists, to-dos, 
 
 ::: code-group
 ```jsx [React] components/Editor.jsx
-import '@verbal/editor/tokens.css';
-import heading from '@verbal/editor/blocks/heading';
-import list from '@verbal/editor/blocks/list';
-import todo from '@verbal/editor/blocks/todo';
-import bold from '@verbal/editor/marks/bold';
-import italic from '@verbal/editor/marks/italic';
-import link from '@verbal/editor/marks/link';
-import slash from '@verbal/editor/ui/slash';
-import { Blocks, useEditor } from '@verbal/editor/react';
+import 'verbal-editor/tokens.css';
+import heading from 'verbal-editor/blocks/heading';
+import list from 'verbal-editor/blocks/list';
+import todo from 'verbal-editor/blocks/todo';
+import bold from 'verbal-editor/marks/bold';
+import italic from 'verbal-editor/marks/italic';
+import link from 'verbal-editor/marks/link';
+import slash from 'verbal-editor/ui/slash';
+import { Blocks, useEditor } from 'verbal-editor/react';
 
 export default function Editor() {
   const editor = useEditor({ blocks: [heading, list, todo], marks: [bold, italic, link], ui: [slash] });
@@ -36,9 +36,9 @@ export default function Page() {
 ```
 ```jsx [Vite] src/main.jsx
 import { createRoot } from 'react-dom/client';
-import '@verbal/editor/tokens.css';
-import preset from '@verbal/editor/preset';
-import { Blocks, useEditor } from '@verbal/editor/react';
+import 'verbal-editor/tokens.css';
+import preset from 'verbal-editor/preset';
+import { Blocks, useEditor } from 'verbal-editor/react';
 
 function App() {
   const editor = useEditor({ ...preset });
@@ -48,13 +48,13 @@ function App() {
 createRoot(document.getElementById('root')).render(<App />);
 ```
 ```js [Vanilla JS] main.js
-import '@verbal/editor/tokens.css';
-import { Editor } from '@verbal/editor';
-import { mount } from '@verbal/editor/dom';
-import heading from '@verbal/editor/blocks/heading';
-import list from '@verbal/editor/blocks/list';
-import bold from '@verbal/editor/marks/bold';
-import slash from '@verbal/editor/ui/slash';
+import 'verbal-editor/tokens.css';
+import { Editor } from 'verbal-editor';
+import { mount } from 'verbal-editor/dom';
+import heading from 'verbal-editor/blocks/heading';
+import list from 'verbal-editor/blocks/list';
+import bold from 'verbal-editor/marks/bold';
+import slash from 'verbal-editor/ui/slash';
 
 const editor = new Editor({ blocks: [heading, list], marks: [bold], ui: [slash] });
 mount(editor, document.getElementById('editor'));
@@ -77,7 +77,7 @@ Pass it as `doc` when you create the editor, or call `setDoc` later.
 :::
 
 ```js storage.js
-import { Editor } from '@verbal/editor';
+import { Editor } from 'verbal-editor';
 
 const saved = localStorage.getItem('note');
 const editor = new Editor({ doc: saved ? JSON.parse(saved) : undefined });

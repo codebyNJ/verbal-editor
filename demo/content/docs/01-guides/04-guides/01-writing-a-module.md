@@ -4,16 +4,16 @@ description: Your own blocks, marks and UI are plain objects with the same contr
 icon: box
 ---
 
-Core knows only paragraphs. Every other block type, mark and piece of UI is a plain object passed to the editor — the same contract the built-in modules use. The types are `BlockModule`, `MarkModule` and `UiModule` from `@verbal/editor`.
+Core knows only paragraphs. Every other block type, mark and piece of UI is a plain object passed to the editor — the same contract the built-in modules use. The types are `BlockModule`, `MarkModule` and `UiModule` from `verbal-editor`.
 
 ## A block
 
 A callout: text with a tone, inserted from the slash menu or by typing `! ` at the start of a line.
 
 ```js callout.js
-import { Editor } from '@verbal/editor';
+import { Editor } from 'verbal-editor';
 
-/** @type {import('@verbal/editor').BlockModule} */
+/** @type {import('verbal-editor').BlockModule} */
 const callout = {
   type: 'callout',
   schema: { props: { tone: ['info', 'warning'] }, content: 'inline' },
@@ -53,9 +53,9 @@ Style it with ordinary CSS: `.callout[data-tone="warning"] { … }`.
 ## A mark
 
 ```js highlight.js
-import { Editor } from '@verbal/editor';
+import { Editor } from 'verbal-editor';
 
-/** @type {import('@verbal/editor').MarkModule} */
+/** @type {import('verbal-editor').MarkModule} */
 const highlight = {
   type: 'highlight',
   tags: ['MARK'],
@@ -75,9 +75,9 @@ The first tag renders the mark, `markdown` converts `==text==` as you type, `md`
 UI modules are framework-free: they get the editor when it mounts and return a cleanup.
 
 ```js word-count.js
-import { Editor } from '@verbal/editor';
+import { Editor } from 'verbal-editor';
 
-/** @type {import('@verbal/editor').UiModule} */
+/** @type {import('verbal-editor').UiModule} */
 const wordCount = {
   name: 'word-count',
   mount(editor) {

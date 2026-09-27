@@ -58,8 +58,8 @@ Other HTML is read in an inert document through each module's parse rules; plain
 `review(editor, changes)` shows the proposed text as a word diff painted over the real text with the Custom Highlight API. The model does not change while you review. Accepting dispatches one ordinary transaction — undo takes it back like anything you typed — and rejecting leaves the document byte-for-byte as it was. See [AI review](#/docs/ai-review).
 
 ```js review.js
-import { Editor } from '@verbal/editor';
-import { review } from '@verbal/editor/ai/pending';
+import { Editor } from 'verbal-editor';
+import { review } from 'verbal-editor/ai/pending';
 
 const editor = new Editor();
 const [first] = editor.getDoc().blocks.doc.children;

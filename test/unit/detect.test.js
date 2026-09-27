@@ -8,7 +8,7 @@ const samples = {
   python: `import os\n\ndef walk(path):\n    for name in os.listdir(path):\n        if name.startswith('.'):\n            continue\n        print(name)\n    return None`,
   html: `<!DOCTYPE html>\n<html>\n  <body>\n    <div class="card"><a href="/docs">Docs</a></div>\n  </body>\n</html>`,
   css: `.card {\n  padding: 12px;\n  border-radius: 8px;\n}\n@media (max-width: 600px) {\n  .card { padding: 8px; }\n}`,
-  json: `{\n  "name": "@verbal/editor",\n  "private": false,\n  "version": 1\n}`,
+  json: `{\n  "name": "verbal-editor",\n  "private": false,\n  "version": 1\n}`,
   bash: `#!/bin/bash\nset -e\ncd "$HOME/project"\nnpm ci && npm test\necho "done: \${PWD}" | grep done`,
   sql: `SELECT u.id, u.name, COUNT(o.id)\nFROM users u\nJOIN orders o ON o.user_id = u.id\nWHERE u.active = 1\nGROUP BY u.id;`,
   go: `package main\n\nimport "fmt"\n\nfunc main() {\n    total := 0\n    fmt.Println(total)\n}`,

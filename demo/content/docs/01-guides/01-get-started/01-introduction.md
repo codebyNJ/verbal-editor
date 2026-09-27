@@ -24,9 +24,9 @@ These figures come from the package's size build and its benchmark; see [Benchma
 ## A first look
 
 ```jsx App.jsx
-import '@verbal/editor/tokens.css';
-import preset from '@verbal/editor/preset';
-import { Blocks, useEditor } from '@verbal/editor/react';
+import 'verbal-editor/tokens.css';
+import preset from 'verbal-editor/preset';
+import { Blocks, useEditor } from 'verbal-editor/react';
 
 export default function App() {
   const editor = useEditor({ ...preset });

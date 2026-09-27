@@ -148,7 +148,7 @@ test('landing: the install tabs work by keyboard and copy the chosen command', a
   await page.keyboard.press('End');
   await expect(page.getByRole('tab', { name: 'bun' })).toHaveAttribute('aria-selected', 'true');
   await page.getByRole('button', { name: 'Copy command' }).click();
-  expect(await page.evaluate(() => window.__copied)).toBe('bun add @verbal/editor');
+  expect(await page.evaluate(() => window.__copied)).toBe('bun add verbal-editor');
   // The choice carries into the docs' code groups.
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('verbal:tabs'))[0])).toBe('bun');
 });

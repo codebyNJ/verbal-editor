@@ -67,9 +67,9 @@ Distribution is a **single package with subpath exports** — the tree-shaking a
 ergonomics of a monorepo, with one version, one changelog, and no workspace tooling.
 
 ```js
-import { Editor } from '@verbal/editor';
-import table from '@verbal/editor/blocks/table';
-import code  from '@verbal/editor/blocks/code';
+import { Editor } from 'verbal-editor';
+import table from 'verbal-editor/blocks/table';
+import code  from 'verbal-editor/blocks/code';
 
 new Editor({ blocks: [table, code] });   // you pay only for what you import
 ```

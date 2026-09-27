@@ -10,19 +10,19 @@ and the high-level design (HLD). `node scripts/check.js` enforces those budgets;
 ## Install
 
 ```sh
-npm i @verbal/editor react react-dom
+npm i verbal-editor react react-dom
 ```
 
-React is an optional peer, needed only by the `<Blocks>` binding; `@verbal/editor/dom` renders the
+React is an optional peer, needed only by the `<Blocks>` binding; `verbal-editor/dom` renders the
 same editor with no framework (`mount(editor, element)`). Joi is an optional peer too, needed only
 by the config file, the CLI and server-side validation — never by the browser.
 
 ## Use
 
 ```jsx
-import '@verbal/editor/tokens.css';
-import preset from '@verbal/editor/preset';
-import { Blocks, useEditor } from '@verbal/editor/react';
+import 'verbal-editor/tokens.css';
+import preset from 'verbal-editor/preset';
+import { Blocks, useEditor } from 'verbal-editor/react';
 
 export function Page({ doc }) {
   const editor = useEditor({ ...preset, doc });
@@ -34,11 +34,11 @@ export function Page({ doc }) {
 brings its own CSS, and nothing registers itself on import:
 
 ```js
-import { Editor } from '@verbal/editor';
-import heading from '@verbal/editor/blocks/heading';
-import table from '@verbal/editor/blocks/table';
-import bold from '@verbal/editor/marks/bold';
-import slash from '@verbal/editor/ui/slash';
+import { Editor } from 'verbal-editor';
+import heading from 'verbal-editor/blocks/heading';
+import table from 'verbal-editor/blocks/table';
+import bold from 'verbal-editor/marks/bold';
+import slash from 'verbal-editor/ui/slash';
 
 const editor = new Editor({ blocks: [heading, table], marks: [bold], ui: [slash] });
 ```
@@ -86,7 +86,7 @@ Editor options beyond `blocks`, `marks`, `ui`, `doc` and `editable` are passed t
 ## AI edits
 
 ```js
-import { review } from '@verbal/editor/ai/pending';
+import { review } from 'verbal-editor/ai/pending';
 
 const { done } = review(editor, { [blockId]: 'The proposed text' });
 ```
@@ -108,14 +108,14 @@ npx verbal init      # asks which modules to enable, writes verbal.config.js
 npx verbal doctor    # validates it and reports each module's gzip cost against its budget
 ```
 
-`verbal.config.js` uses `defineConfig` from `@verbal/editor/config`. An invalid config throws
+`verbal.config.js` uses `defineConfig` from `verbal-editor/config`. An invalid config throws
 with the exact path, for example `"blocks[1]" must be one of [...]`, so a build that loads it
 fails. It is build-time only: never import it from browser code.
 
 On a server, reject malformed documents before storing them:
 
 ```js
-import { validateDoc } from '@verbal/editor/server';
+import { validateDoc } from 'verbal-editor/server';
 
 const { error } = validateDoc(req.body, config);
 if (error) return res.status(422).json(error.details);

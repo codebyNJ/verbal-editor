@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { caret } from '@verbal/editor';
-import preset from '@verbal/editor/preset';
-import { Blocks, useEditor } from '@verbal/editor/react';
+import { caret } from 'verbal-editor';
+import preset from 'verbal-editor/preset';
+import { Blocks, useEditor } from 'verbal-editor/react';
 import sizes from 'virtual:sizes';
 import journal from 'virtual:journal';
 import { faq } from './faq.js';
@@ -23,10 +23,10 @@ const times = (e) => one(e.total / verbal.total);
 const date = (d) => new Date(`${d}T00:00:00`).toLocaleDateString('en', { year: 'numeric', month: 'long', day: 'numeric' });
 
 const installs = [
-  ['npm', 'npm install @verbal/editor'],
-  ['pnpm', 'pnpm add @verbal/editor'],
-  ['yarn', 'yarn add @verbal/editor'],
-  ['bun', 'bun add @verbal/editor'],
+  ['npm', 'npm install verbal-editor'],
+  ['pnpm', 'pnpm add verbal-editor'],
+  ['yarn', 'yarn add verbal-editor'],
+  ['bun', 'bun add verbal-editor'],
 ];
 /** A tab chosen here is the tab the docs' code groups open on (they read the same list). */
 const remember = (label) => {

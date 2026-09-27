@@ -159,7 +159,7 @@ async function modulePage(m, sizes) {
   const live = example(m);
   const out = [
     prose(text),
-    core ? 'Built into `@verbal/editor`: every editor has it, and it is part of the core bundle.' : `\`\`\`js\nimport ${spec} from '@verbal/editor/${kind}/${name}';\n\`\`\``,
+    core ? 'Built into `verbal-editor`: every editor has it, and it is part of the core bundle.' : `\`\`\`js\nimport ${spec} from 'verbal-editor/${kind}/${name}';\n\`\`\``,
     size ? table(['JS gzip', 'CSS gzip'], [[kb(size.js), size.css ? kb(size.css) : '—']]) : '',
     `See it live on [${live.title}](#/examples/${live.id}) — every example page on the landing is editable.`,
   ];
@@ -227,7 +227,7 @@ function imports() {
   const add = (sub, file, size) => {
     const src = existsSync(file) ? readFileSync(file, 'utf8') : '';
     const names = [...new Set(exportNames(src))];
-    rows.push([code(`@verbal/editor${sub}`), names.map((n) => code(n)).join(' ') || '—', size ? kb(size.js) : 'build time', size?.css ? kb(size.css) : '—']);
+    rows.push([code(`verbal-editor${sub}`), names.map((n) => code(n)).join(' ') || '—', size ? kb(size.js) : 'build time', size?.css ? kb(size.css) : '—']);
   };
   const s = existsSync(at('dist/index.js'));
   const sz = (...k) => (s ? sizeOf(...k) : null);
@@ -237,7 +237,7 @@ function imports() {
   for (const m of modules.filter((x) => !(x.kind === 'blocks' && x.name === 'paragraph'))) add(`/${m.kind}/${m.name}`, m.file, sz(`${m.kind}/${m.name}`));
   add('/config', at('src/config/defineConfig.js'), null);
   add('/server', at('src/server/index.js'), null);
-  rows.push([code('@verbal/editor/tokens.css'), 'every custom property', '—', s ? kb(sizeOf('tokens.css').css) : '—']);
+  rows.push([code('verbal-editor/tokens.css'), 'every custom property', '—', s ? kb(sizeOf('tokens.css').css) : '—']);
   return table(['Import', 'Exports', 'JS gzip', 'CSS gzip'], rows);
 }
 
@@ -250,7 +250,7 @@ function doctor() {
   try {
     const file = join(dir, 'verbal.config.js');
     const sample = read('demo/content/docs/01-guides/03-configuration/01-config-file.md').match(/```js verbal\.config\.js\n([\s\S]*?)```/)[1];
-    writeFileSync(file, sample.replace('@verbal/editor/config', pathToFileURL(at('dist/node/config.js')).href));
+    writeFileSync(file, sample.replace('verbal-editor/config', pathToFileURL(at('dist/node/config.js')).href));
     return fence(execFileSync(process.execPath, [at('cli/index.js'), 'doctor', file], { encoding: 'utf8' }).replaceAll(dir, '.'));
   } finally {
     rmSync(dir, { recursive: true });

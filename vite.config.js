@@ -30,12 +30,12 @@ export const entries = Object.fromEntries(
     .map(([k, f]) => [k, at('src', f)]),
 );
 
-/** Resolves `@verbal/editor/*` to src/ (default) or dist/ (VERBAL_DIST=1). */
+/** Resolves `verbal-editor/*` to src/ (default) or dist/ (VERBAL_DIST=1). */
 const alias = (dist) => ({
   name: 'verbal-alias',
   enforce: 'pre',
   resolveId(id) {
-    const sub = /^@verbal\/editor(?:\/(.+))?$/.exec(id)?.[1] ?? (id === '@verbal/editor' ? 'index' : null);
+    const sub = /^verbal-editor(?:\/(.+))?$/.exec(id)?.[1] ?? (id === 'verbal-editor' ? 'index' : null);
     if (!sub) return;
     if (sub.endsWith('.css')) return at(dist ? 'dist' : 'src', sub);
     return dist ? at('dist', `${sub}.js`) : entries[sub];

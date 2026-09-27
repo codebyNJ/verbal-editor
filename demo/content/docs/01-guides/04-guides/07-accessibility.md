@@ -13,8 +13,8 @@ icon: a11y
 ## Checking your setup
 
 ```js audit.js
-import { Editor } from '@verbal/editor';
-import preset from '@verbal/editor/preset';
+import { Editor } from 'verbal-editor';
+import preset from 'verbal-editor/preset';
 
 // Every slash entry has a label a screen reader can announce.
 const editor = new Editor({ ...preset });

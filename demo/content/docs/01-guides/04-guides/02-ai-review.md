@@ -7,8 +7,8 @@ icon: sparkle
 An AI edit arrives as a proposal, not a replacement. The document does not change until you accept: deletions are painted over the real text with the CSS Custom Highlight API, and the proposed text sits beside the block. Accept or reject everything — <kbd>⌘⏎</kbd> or <kbd>Esc</kbd> — or hunk by hunk. An accepted edit is one ordinary undo step; a rejected one leaves the document byte-for-byte as it was.
 
 ```js suggest.js
-import { Editor } from '@verbal/editor';
-import { review } from '@verbal/editor/ai/pending';
+import { Editor } from 'verbal-editor';
+import { review } from 'verbal-editor/ai/pending';
 
 const editor = new Editor();
 
@@ -43,10 +43,10 @@ export async function rewrite(texts, callModel) {
 
 ## The diff
 
-`diffWords(before, after)` from `@verbal/editor/ai/diff` is the word-level Myers diff the review uses, and `hunks(parts)` groups it into changes. Both work on plain strings, on the server too.
+`diffWords(before, after)` from `verbal-editor/ai/diff` is the word-level Myers diff the review uses, and `hunks(parts)` groups it into changes. Both work on plain strings, on the server too.
 
 ```js diff.js
-import { diffWords, hunks } from '@verbal/editor/ai/diff';
+import { diffWords, hunks } from 'verbal-editor/ai/diff';
 
 const parts = diffWords('the quick brown fox', 'the quick red fox');
 console.log(hunks(parts).length); // 1

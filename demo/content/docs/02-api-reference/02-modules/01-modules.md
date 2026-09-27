@@ -9,8 +9,8 @@ Each module below has its own page, generated from the module itself: the text i
 {{modules}}
 
 ```js module.js
-import { Editor } from '@verbal/editor';
-import heading from '@verbal/editor/blocks/heading';
+import { Editor } from 'verbal-editor';
+import heading from 'verbal-editor/blocks/heading';
 
 // Everything on a module's page is read from objects like this one.
 console.log(heading.type, Object.keys(heading.schema?.props ?? {}), new Editor({ blocks: [heading] }).registry.slash.length);

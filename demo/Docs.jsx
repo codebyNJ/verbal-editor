@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Blocks, useEditor } from '@verbal/editor/react';
+import { Blocks, useEditor } from 'verbal-editor/react';
 import site from 'virtual:content';
 import logo from './assets/logo.svg';
 import { Icon } from './icons.jsx';
@@ -96,7 +96,7 @@ function Actions({ page }) {
   }, [open]);
   const ask = `Read ${mdUrl(page)} so I can ask questions about it.`;
   const run = (what, text) => copy(text).then(() => (setDone(what), setOpen(false), setTimeout(() => setDone(''), 1600)));
-  const prompt = `You are helping me build with Verbal (@verbal/editor), a block editor for the web. Use this page of its docs (${mdUrl(page)}) as context:\n\n${markdown(page)}`;
+  const prompt = `You are helping me build with Verbal (verbal-editor), a block editor for the web. Use this page of its docs (${mdUrl(page)}) as context:\n\n${markdown(page)}`;
   return (
     <div className={s.actions} ref={box}>
       <button type="button" className={s.copyPage} onClick={() => run('page', markdown(page))}>

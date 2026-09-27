@@ -57,7 +57,7 @@ const EMPTY = { root: 'doc', blocks: { doc: { type: 'doc', children: ['b_start']
 /**
  * The editor: a document, its history, and a view that owns each block's content element.
  * Construct it with the modules you use, render it with a binding (`<Blocks>` from
- * `@verbal/editor/react`), and read or change the document through the methods below.
+ * `verbal-editor/react`), and read or change the document through the methods below.
  * @example
  * const editor = new Editor({ blocks: [heading], marks: [bold], ui: [slash] });
  * editor.on('change', () => save(editor.getDoc()));

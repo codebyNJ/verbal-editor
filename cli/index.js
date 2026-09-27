@@ -50,14 +50,14 @@ async function init() {
   const list = (names) => `[${names.map((n) => `'${n}'`).join(', ')}]`;
   writeFileSync(
     file,
-    `import { defineConfig } from '@verbal/editor/config';\n\nexport default defineConfig({\n  blocks: ${list(cfg.blocks)},\n  marks: ${list(cfg.marks)},\n  ui: ${list(cfg.ui)},\n  ai: ${cfg.ai},\n  budget: ${cfg.budget},\n});\n`,
+    `import { defineConfig } from 'verbal-editor/config';\n\nexport default defineConfig({\n  blocks: ${list(cfg.blocks)},\n  marks: ${list(cfg.marks)},\n  ui: ${list(cfg.ui)},\n  ai: ${cfg.ai},\n  budget: ${cfg.budget},\n});\n`,
   );
   const both = cfg.blocks.filter((n) => cfg.marks.includes(n));
   const name = (n, kind) => (both.includes(n) ? `${n}${kind === 'blocks' ? 'Block' : 'Mark'}` : n);
-  const imports = ['blocks', 'marks', 'ui'].flatMap((kind) => cfg[kind].map((n) => `import ${name(n, kind)} from '@verbal/editor/${kind}/${n}';`));
-  if (cfg.ai) imports.push("import { review } from '@verbal/editor/ai/pending';");
+  const imports = ['blocks', 'marks', 'ui'].flatMap((kind) => cfg[kind].map((n) => `import ${name(n, kind)} from 'verbal-editor/${kind}/${n}';`));
+  if (cfg.ai) imports.push("import { review } from 'verbal-editor/ai/pending';");
   const arg = ['blocks', 'marks', 'ui'].map((kind) => `${kind}: [${cfg[kind].map((n) => name(n, kind)).join(', ')}]`).join(', ');
-  console.log(`✓ wrote ${file}\n\nimport { Editor } from '@verbal/editor';\nimport '@verbal/editor/tokens.css';\n${imports.join('\n')}\n\nconst editor = new Editor({ ${arg} });`);
+  console.log(`✓ wrote ${file}\n\nimport { Editor } from 'verbal-editor';\nimport 'verbal-editor/tokens.css';\n${imports.join('\n')}\n\nconst editor = new Editor({ ${arg} });`);
 }
 
 /** Relative imports of a built file. */

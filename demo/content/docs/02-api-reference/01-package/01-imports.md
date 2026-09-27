@@ -13,10 +13,10 @@ Each subpath is its own entry: importing one pulls in only what it needs, and ev
 ## One module, one import
 
 ```js imports.js
-import { Editor } from '@verbal/editor';
-import { Blocks, useEditor } from '@verbal/editor/react';
-import table, { addRow } from '@verbal/editor/blocks/table';
-import { review } from '@verbal/editor/ai/pending';
+import { Editor } from 'verbal-editor';
+import { Blocks, useEditor } from 'verbal-editor/react';
+import table, { addRow } from 'verbal-editor/blocks/table';
+import { review } from 'verbal-editor/ai/pending';
 
 console.log(typeof Editor, typeof Blocks, typeof useEditor, table.type, typeof addRow, typeof review);
 ```

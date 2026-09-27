@@ -10,8 +10,8 @@
  *   ::: chart bar :::  ::: diagram name :::  a chart of the table above it; an inline SVG diagram
  *   <kbd>⌘K</kbd>                           a key
  */
-import { Editor, fromMarkdown } from '@verbal/editor';
-import preset from '@verbal/editor/preset';
+import { Editor, fromMarkdown } from 'verbal-editor';
+import preset from 'verbal-editor/preset';
 import { svg } from './icons.jsx';
 import s from './markdown.module.css';
 import { charted, doc } from './pages.js';

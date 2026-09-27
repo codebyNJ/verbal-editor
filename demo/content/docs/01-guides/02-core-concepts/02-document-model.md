@@ -42,7 +42,7 @@ Text is a list of runs. Each run carries the marks on it, sorted by type; a mark
 ## Reading and writing
 
 ```js io.js
-import { Editor, serialize } from '@verbal/editor';
+import { Editor, serialize } from 'verbal-editor';
 
 const editor = new Editor();
 const doc = editor.getDoc(); // a deep copy, blocks in document order

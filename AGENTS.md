@@ -1,4 +1,4 @@
-# AGENTS.md — working with @verbal/editor
+# AGENTS.md — working with verbal-editor
 
 Guidance for coding agents that add Verbal to an app or change this package. The full docs are Markdown: every page is served as `docs/<slug>.md` next to the site, `llms.txt` indexes them and `llms-full.txt` has them all in one file.
 
@@ -9,14 +9,14 @@ A block editor for the web with no runtime dependencies. Every block is its own 
 ## Adding it to an app
 
 ```js
-import '@verbal/editor/tokens.css';                 // once: the whole theme
-import { Editor } from '@verbal/editor';            // the editor (no DOM until mounted)
-import { Blocks, useEditor } from '@verbal/editor/react'; // React binding
-import { mount } from '@verbal/editor/dom';         // or: no framework
-import preset from '@verbal/editor/preset';         // every module, or import them one by one:
-import heading from '@verbal/editor/blocks/heading';
-import bold from '@verbal/editor/marks/bold';
-import slash from '@verbal/editor/ui/slash';
+import 'verbal-editor/tokens.css';                 // once: the whole theme
+import { Editor } from 'verbal-editor';            // the editor (no DOM until mounted)
+import { Blocks, useEditor } from 'verbal-editor/react'; // React binding
+import { mount } from 'verbal-editor/dom';         // or: no framework
+import preset from 'verbal-editor/preset';         // every module, or import them one by one:
+import heading from 'verbal-editor/blocks/heading';
+import bold from 'verbal-editor/marks/bold';
+import slash from 'verbal-editor/ui/slash';
 ```
 
 - React: `const editor = useEditor({ blocks: [heading], marks: [bold], ui: [slash] }); return <Blocks editor={editor} />;`
@@ -30,8 +30,8 @@ import slash from '@verbal/editor/ui/slash';
 1. **Never mutate the document.** `editor.doc` and `getDoc()` are read-only views. Change it with a transaction: `editor.dispatch(editor.tx().insertText(id, 0, 'Hi'))`, or a command (`insert`, `setType`, `toggleMark`, `indent`, `remove`, `paste`).
 2. **Never write into a block's editable element.** The view owns it. Use transactions; the view repaints.
 3. **Import modules explicitly.** Importing registers nothing; pass modules to the editor. Each subpath is its own entry — do not import from `dist/` paths.
-4. **Joi is build-time only.** `@verbal/editor/config` and `@verbal/editor/server` import Joi. Never import them from browser code.
-5. **Validate on the server.** Loading in the browser repairs bad documents; `validateDoc(doc, config)` from `@verbal/editor/server` rejects them with paths.
+4. **Joi is build-time only.** `verbal-editor/config` and `verbal-editor/server` import Joi. Never import them from browser code.
+5. **Validate on the server.** Loading in the browser repairs bad documents; `validateDoc(doc, config)` from `verbal-editor/server` rejects them with paths.
 6. **Style with tokens.** Override `--v-*` custom properties after `tokens.css`; target block types with `[data-type="..."]`.
 
 ## Document shape

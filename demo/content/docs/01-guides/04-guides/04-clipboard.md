@@ -18,8 +18,8 @@ Inside a code block, a paste is always plain text.
 ## From code
 
 ```js clipboard.js
-import { Editor, caret } from '@verbal/editor';
-import preset from '@verbal/editor/preset';
+import { Editor, caret } from 'verbal-editor';
+import preset from 'verbal-editor/preset';
 
 const editor = new Editor({ ...preset });
 const first = editor.getDoc().blocks.doc.children[0];
@@ -36,8 +36,8 @@ console.log(copied?.text);
 `fromMarkdown(text, editor.registry)` gives the block literals a paste would insert, and `write(blocks, editor.registry)` the `{ html, text }` a copy would produce — useful for importing notes or exporting a document:
 
 ```js markdown.js
-import { Editor, fromMarkdown, write } from '@verbal/editor';
-import preset from '@verbal/editor/preset';
+import { Editor, fromMarkdown, write } from 'verbal-editor';
+import preset from 'verbal-editor/preset';
 
 const editor = new Editor({ ...preset });
 const blocks = fromMarkdown('# Title\n\nSome **bold** text.', editor.registry);

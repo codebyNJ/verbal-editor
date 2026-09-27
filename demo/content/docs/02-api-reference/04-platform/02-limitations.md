@@ -19,8 +19,8 @@ icon: warning
 ## Working around the embed titles
 
 ```js unfurl.js
-import { Editor } from '@verbal/editor';
-import embed from '@verbal/editor/blocks/embed';
+import { Editor } from 'verbal-editor';
+import embed from 'verbal-editor/blocks/embed';
 
 // Your server fetches the page and returns its title; the card shows it.
 const editor = new Editor({ blocks: [embed], unfurl: (url) => fetch(`/api/unfurl?url=${encodeURIComponent(url)}`).then((r) => r.json()) });

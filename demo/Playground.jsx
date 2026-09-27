@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import preset from '@verbal/editor/preset';
-import { Blocks, useEditor } from '@verbal/editor/react';
+import preset from 'verbal-editor/preset';
+import { Blocks, useEditor } from 'verbal-editor/react';
 import sizes from 'virtual:sizes';
 import { Icon } from './icons.jsx';
 import { follow } from './markdown.js';
@@ -42,9 +42,9 @@ function source(on, binding) {
   const list = (kind) => picked.filter((m) => m.kind === kind).map(id).join(', ');
   const options = `{ blocks: [${list('blocks')}], marks: [${list('marks')}], ui: [${list('ui')}] }`;
   return [
-    "import '@verbal/editor/tokens.css';",
-    binding === 'react' ? "import { Blocks, useEditor } from '@verbal/editor/react';" : "import { Editor } from '@verbal/editor';\nimport { mount } from '@verbal/editor/dom';",
-    ...picked.map((m) => `import ${id(m)} from '@verbal/editor/${m.kind}/${m.name}';`),
+    "import 'verbal-editor/tokens.css';",
+    binding === 'react' ? "import { Blocks, useEditor } from 'verbal-editor/react';" : "import { Editor } from 'verbal-editor';\nimport { mount } from 'verbal-editor/dom';",
+    ...picked.map((m) => `import ${id(m)} from 'verbal-editor/${m.kind}/${m.name}';`),
     '',
     binding === 'react'
       ? `export default function MyEditor() {\n  const editor = useEditor(${options});\n  return <Blocks editor={editor} />;\n}`

@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { review } from '@verbal/editor/preset';
-import { mount } from '@verbal/editor/dom';
-import { Blocks, useEditor } from '@verbal/editor/react';
+import { review } from 'verbal-editor/preset';
+import { mount } from 'verbal-editor/dom';
+import { Blocks, useEditor } from 'verbal-editor/react';
 import site from 'virtual:content';
 import logo from './assets/logo.svg';
 import { Icon, iconNames } from './icons.jsx';
@@ -96,7 +96,7 @@ function Page({ page }) {
   );
 }
 
-/** The same editor on the framework-free binding: @verbal/editor/dom instead of React. */
+/** The same editor on the framework-free binding: verbal-editor/dom instead of React. */
 function Plain({ editor }) {
   const ref = useRef(null);
   useEffect(() => mount(editor, ref.current), [editor]);

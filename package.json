@@ -1,5 +1,5 @@
 {
-  "name": "@verbal/editor",
+  "name": "verbal-editor",
   "version": "0.1.0",
   "description": "Notion-style block editor with zero runtime dependencies and zero React re-renders while typing.",
   "type": "module",
@@ -20,7 +20,7 @@
   },
   "files": ["dist", "cli", "AGENTS.md"],
   "sideEffects": ["**/*.css"],
-  "bin": { "verbal": "./cli/index.js" },
+  "bin": { "verbal": "cli/index.js" },
   "scripts": {
     "dev": "vite",
     "dev:dist": "VERBAL_DIST=1 vite",

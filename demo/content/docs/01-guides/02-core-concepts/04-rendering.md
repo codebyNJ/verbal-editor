@@ -19,8 +19,8 @@ A binding renders one host element per block and the list of its children; every
 
 ```jsx Page.jsx
 import { useEffect } from 'react';
-import preset from '@verbal/editor/preset';
-import { Blocks, useEditor } from '@verbal/editor/react';
+import preset from 'verbal-editor/preset';
+import { Blocks, useEditor } from 'verbal-editor/react';
 
 export function Page({ doc, onSave }) {
   const editor = useEditor({ ...preset, doc });
@@ -35,12 +35,12 @@ export function Page({ doc, onSave }) {
 
 ## Plain DOM
 
-`@verbal/editor/dom` does the same without a framework: `mount` builds the hosts, patches only the ones whose version moved, and returns the function that removes it all. The [Core only example](#/examples/core) runs on it, with no modules at all.
+`verbal-editor/dom` does the same without a framework: `mount` builds the hosts, patches only the ones whose version moved, and returns the function that removes it all. The [Core only example](#/examples/core) runs on it, with no modules at all.
 
 ```js vanilla.js
-import { Editor } from '@verbal/editor';
-import { mount } from '@verbal/editor/dom';
-import heading from '@verbal/editor/blocks/heading';
+import { Editor } from 'verbal-editor';
+import { mount } from 'verbal-editor/dom';
+import heading from 'verbal-editor/blocks/heading';
 
 const editor = new Editor({ blocks: [heading] });
 const stop = mount(editor, document.getElementById('editor'));
@@ -52,8 +52,8 @@ window.addEventListener('pagehide', stop);
 Pass `onRender` to see every block render; both bindings call it. The landing's render counter and this repository's tests use it.
 
 ```jsx Watched.jsx
-import preset from '@verbal/editor/preset';
-import { Blocks, useEditor } from '@verbal/editor/react';
+import preset from 'verbal-editor/preset';
+import { Blocks, useEditor } from 'verbal-editor/react';
 
 export function Watched() {
   const editor = useEditor({ ...preset, onRender: (id) => console.count(id) });
@@ -66,8 +66,8 @@ export function Watched() {
 `editable: false` renders the same document without editing: text stays selectable and copyable, every transaction is ignored, and modules hide their controls (a code block's language picker becomes a label, table tools and chart menus disappear, to-do boxes stop toggling).
 
 ```jsx Article.jsx
-import preset from '@verbal/editor/preset';
-import { Blocks, useEditor } from '@verbal/editor/react';
+import preset from 'verbal-editor/preset';
+import { Blocks, useEditor } from 'verbal-editor/react';
 
 export function Article({ doc }) {
   const editor = useEditor({ blocks: preset.blocks, marks: preset.marks, doc, editable: false });

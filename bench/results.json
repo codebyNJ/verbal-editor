@@ -364,15 +364,15 @@
       "setup": "full",
       "packages": [
         {
-          "name": "@verbal/editor",
+          "name": "verbal-editor",
           "version": "0.1.0"
         },
         {
-          "name": "@verbal/editor/react",
+          "name": "verbal-editor/react",
           "version": "0.1.0"
         },
         {
-          "name": "@verbal/editor/preset",
+          "name": "verbal-editor/preset",
           "version": "0.1.0"
         }
       ],
@@ -389,11 +389,11 @@
       "setup": "minimal",
       "packages": [
         {
-          "name": "@verbal/editor",
+          "name": "verbal-editor",
           "version": "0.1.0"
         },
         {
-          "name": "@verbal/editor/react",
+          "name": "verbal-editor/react",
           "version": "0.1.0"
         }
       ],

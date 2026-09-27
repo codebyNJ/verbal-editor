@@ -9,7 +9,7 @@ A keystroke, a paste, a drag, an undo and an accepted AI edit are all the same t
 ## Building a transaction
 
 ```js tx.js
-import { Editor, caret } from '@verbal/editor';
+import { Editor, caret } from 'verbal-editor';
 
 const editor = new Editor();
 const first = editor.getDoc().blocks.doc.children[0];
@@ -37,9 +37,9 @@ editor.dispatch(t, { selection: caret(first, 12) });
 Higher-level commands act on the current selection the way the keyboard does, and each is one transaction:
 
 ```js commands.js
-import { Editor, caret } from '@verbal/editor';
-import heading from '@verbal/editor/blocks/heading';
-import bold from '@verbal/editor/marks/bold';
+import { Editor, caret } from 'verbal-editor';
+import heading from 'verbal-editor/blocks/heading';
+import bold from 'verbal-editor/marks/bold';
 
 const editor = new Editor({ blocks: [heading], marks: [bold] });
 const first = editor.getDoc().blocks.doc.children[0];
@@ -61,7 +61,7 @@ A selection is two text points — `{ anchor, focus }`, each `{ block, offset }`
 ## Events
 
 ```js events.js
-import { Editor } from '@verbal/editor';
+import { Editor } from 'verbal-editor';
 
 const editor = new Editor();
 const stop = editor.on('change', ({ ops, origin }) => console.log(ops.length, 'ops from', origin ?? 'a command'));

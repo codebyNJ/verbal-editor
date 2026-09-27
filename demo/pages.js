@@ -249,7 +249,7 @@ export const pages = [
     dom: true,
     description: 'No modules and no framework: the paragraph core on the plain DOM binding.',
     doc: doc(
-      p('This editor registers no modules at all: new Editor() with nothing but paragraph, which core ships, rendered by the DOM binding from @verbal/editor/dom instead of React.'),
+      p('This editor registers no modules at all: new Editor() with nothing but paragraph, which core ships, rendered by the DOM binding from verbal-editor/dom instead of React.'),
       p('Split, merge, nest, move, undo and redo all work here; the render counter still counts, because both bindings call onRender.'),
     ),
   },

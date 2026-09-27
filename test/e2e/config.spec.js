@@ -11,11 +11,11 @@ const { validateDoc } = await import(join(repo, 'dist/node/server.js'));
 
 test.skip(({ browserName }) => browserName !== 'chromium', 'Node-side: runs once');
 
-/** A throwaway app with @verbal/editor and joi installed, and a way to run the CLI in it. */
+/** A throwaway app with verbal-editor and joi installed, and a way to run the CLI in it. */
 function app() {
   const dir = mkdtempSync(join(tmpdir(), 'verbal-app-'));
-  mkdirSync(join(dir, 'node_modules/@verbal'), { recursive: true });
-  symlinkSync(repo, join(dir, 'node_modules/@verbal/editor'));
+  mkdirSync(join(dir, 'node_modules'), { recursive: true });
+  symlinkSync(repo, join(dir, 'node_modules/verbal-editor'));
   symlinkSync(join(repo, 'node_modules/joi'), join(dir, 'node_modules/joi'));
   const run = (args, input = '') =>
     new Promise((done) => {
@@ -52,10 +52,10 @@ test('F-61: "verbal init" asks which modules to enable and writes a config that 
     expect(a.config()).toContain(`marks: [${available.marks.map((m) => `'${m}'`).join(', ')}],`);
     expect(a.config()).toContain("ui: ['slash'],");
     expect(a.config()).toContain('ai: true,');
-    expect(init.out).toContain("import code from '@verbal/editor/marks/code';");
-    expect(init.out).toContain("import { review } from '@verbal/editor/ai/pending';");
+    expect(init.out).toContain("import code from 'verbal-editor/marks/code';");
+    expect(init.out).toContain("import { review } from 'verbal-editor/ai/pending';");
     expect(init.out).toContain('new Editor({ blocks: [heading, table, chart], marks: [bold, italic, strike, code, link], ui: [slash] })');
-    expect((await a.run(['init', '--yes', '--force'])).out).toContain("import codeBlock from '@verbal/editor/blocks/code';");
+    expect((await a.run(['init', '--yes', '--force'])).out).toContain("import codeBlock from 'verbal-editor/blocks/code';");
     a.write(a.config().replace("ui: ['slash', 'toolbar', 'dnd', 'emoji']", "ui: ['slash']").replace('ai: false', 'ai: true'));
     const doctor = await a.run(['doctor']);
     expect(doctor.code).toBe(0);

@@ -32,11 +32,11 @@ test('playground: toggling a module changes the editor, the measured total and t
   await expect(inspector(page).locator('[data-size] strong').first()).toHaveText(kb(total(all)));
   await inspector(page).getByRole('checkbox', { name: /^table/ }).uncheck();
   await expect(inspector(page).locator('[data-size] strong').first()).toHaveText(kb(total(all.filter((k) => k !== 'blocks/table'))));
-  await expect(code(page)).not.toContainText("'@verbal/editor/blocks/table'");
+  await expect(code(page)).not.toContainText("'verbal-editor/blocks/table'");
   expect(await page.evaluate(() => 'table' in editor.registry.blocks)).toBe(false);
   await expect(page.locator('[data-verbal]')).toContainText('Keep this text');
   await inspector(page).getByRole('checkbox', { name: /^table/ }).check();
-  await expect(code(page)).toContainText("import table from '@verbal/editor/blocks/table';");
+  await expect(code(page)).toContainText("import table from 'verbal-editor/blocks/table';");
   expect(await page.evaluate(() => 'table' in editor.registry.blocks)).toBe(true);
 });
 
@@ -45,7 +45,7 @@ test('playground: the generated code imports only real entries, for React and fo
   for (const binding of ['React', 'DOM']) {
     await inspector(page).getByRole('radio', { name: binding }).click();
     const text = await code(page).textContent();
-    const subs = [...text.matchAll(/from '@verbal\/editor((?:\/[\w/.-]+)?)'|import '@verbal\/editor(\/[\w.]+)'/g)].map((m) => m[1] ?? m[2]);
+    const subs = [...text.matchAll(/from 'verbal-editor((?:\/[\w/.-]+)?)'|import 'verbal-editor(\/[\w.]+)'/g)].map((m) => m[1] ?? m[2]);
     expect(subs.length).toBeGreaterThan(20);
     for (const sub of subs) expect(existsSync(resolveExport(`.${sub}`) ?? ''), `${binding}: ${sub}`).toBe(true);
     expect(text).toContain(binding === 'React' ? '<Blocks editor={editor} />' : "mount(editor, document.getElementById('editor'))");

@@ -7,7 +7,7 @@ icon: settings
 A config file is optional. It gives one place to name the modules your app uses, feeds [server validation](#/docs/server-validation) the same list, and lets [`verbal doctor`](#/docs/cli) hold the editor to a size budget in CI.
 
 ```js verbal.config.js
-import { defineConfig } from '@verbal/editor/config';
+import { defineConfig } from 'verbal-editor/config';
 
 export default defineConfig({
   blocks: ['heading', 'list', 'todo', 'table', 'code'],
@@ -22,7 +22,7 @@ export default defineConfig({
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `blocks` | `string[]` | `[]` | block modules by name — the same names as `@verbal/editor/blocks/<name>` |
+| `blocks` | `string[]` | `[]` | block modules by name — the same names as `verbal-editor/blocks/<name>` |
 | `marks` | `string[]` | `[]` | mark modules by name |
 | `ui` | `string[]` | `[]` | UI modules by name |
 | `ai` | `boolean` | `false` | whether the app uses AI review |
@@ -31,7 +31,7 @@ export default defineConfig({
 The names come from the package itself — the config accepts exactly the modules it ships:
 
 ```js names.js
-import { available } from '@verbal/editor/config';
+import { available } from 'verbal-editor/config';
 
 console.log(available.blocks, available.marks, available.ui);
 ```
