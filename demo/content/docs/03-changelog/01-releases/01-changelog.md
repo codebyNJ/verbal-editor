@@ -4,9 +4,18 @@ description: What each version contains. Only what is in the package is listed.
 icon: history
 ---
 
-## {{version}} — not yet published
+## 0.1.1 — 30 September 2026
 
-The first version. It has not been published to npm; build it from this repository with `npm run build`.
+Package metadata only: the editor, its CSS and the CLI are byte-identical to 0.1.0.
+
+- npm now links to the source repository and the issue tracker, and lists keywords.
+- The homepage is [verbal-editor.nijeeshnj.tech](https://verbal-editor.nijeeshnj.tech).
+- Published from GitHub Actions with npm provenance.
+- The README links runnable starters for React (Vite) and Next.js.
+
+## 0.1.0 — 27 September 2026
+
+The first version.
 
 ### Package
 
