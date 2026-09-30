@@ -2,6 +2,7 @@
 node_modules/
 dist/
 site-dist/
+.next/
 # Tool output.
 .playwright-mcp/
 test-results/

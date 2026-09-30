@@ -6,6 +6,7 @@ import sizes from 'virtual:sizes';
 import journal from 'virtual:journal';
 import { faq } from './faq.js';
 import bench from '../bench/results.json';
+import { name, repository } from '../package.json';
 import s from './Landing.module.css';
 
 // Every figure on this page is read from the size build (virtual:sizes) or bench/results.json.
@@ -20,6 +21,7 @@ const kb = (n) => (n / 1000).toFixed(2);
 const one = (n) => (Math.round(n * 10) / 10).toFixed(1);
 /** How many times Verbal's full setup an editor's is. */
 const times = (e) => one(e.total / verbal.total);
+const repo = repository.url.replace(/^git\+|\.git$/g, '');
 const date = (d) => new Date(`${d}T00:00:00`).toLocaleDateString('en', { year: 'numeric', month: 'long', day: 'numeric' });
 
 const installs = [
@@ -502,8 +504,8 @@ export default function Landing() {
           </nav>
           <div>
             <p className={s.label}>Community</p>
-            <span className={s.soon}>GitHub <small>no public repository yet</small></span>
-            <span className={s.soon}>npm <small>not published yet</small></span>
+            <a href={repo} target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href={`https://www.npmjs.com/package/${name}`} target="_blank" rel="noopener noreferrer">npm</a>
           </div>
         </div>
         <p className={s.legal}>MIT licence. Display type: League Gothic, <a href="fonts/OFL.txt">SIL Open Font License</a>.</p>

@@ -207,7 +207,7 @@ export default function Workspace({ route, theme, onTheme }) {
         <nav aria-label="Elsewhere" className={s.elsewhere}>
           <a href="#/docs/introduction"><Icon name="book" />Docs<Icon name="external" size={12} /></a>
           {site.repo && <a href={site.repo} target="_blank" rel="noopener noreferrer"><Icon name="branch" />GitHub<Icon name="external" size={12} /></a>}
-          <span title="Install from a local build until it is on npm"><Icon name="package" />npm <small>not published yet</small></span>
+          <a href={`https://www.npmjs.com/package/${site.name}`} target="_blank" rel="noopener noreferrer"><Icon name="package" />npm<Icon name="external" size={12} /></a>
         </nav>
       </aside>
       <div className={s.scrim} onClick={() => setSidebar(false)} />

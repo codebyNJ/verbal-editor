@@ -205,6 +205,8 @@ const seo = {
       meta('name', 'twitter:image:alt', alt),
       '<link rel="alternate" type="text/plain" href="llms.txt" title="The docs, for language models" />',
       `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`,
+      // Vercel Web Analytics (cookieless), loaded only on the production host so previews and tests stay offline.
+      `<script>if (location.hostname === ${JSON.stringify(new URL(home).hostname)}) document.head.append(Object.assign(document.createElement('script'), { defer: true, src: '/_vercel/insights/script.js' }));</script>`,
     ];
     const text = [
       `<h1>${esc(title)}</h1>`,

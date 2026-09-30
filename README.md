@@ -1,5 +1,7 @@
 # Verbal Editor
 
+[Website](https://verbal-editor.nijeeshnj.tech) · [Docs](https://verbal-editor.nijeeshnj.tech/#/docs/introduction) · [Try it on StackBlitz](https://stackblitz.com/github/codebyNJ/verbal-editor/tree/main/examples/react?file=src/App.jsx) · [npm](https://www.npmjs.com/package/verbal-editor)
+
 A Notion-style block editor with zero runtime dependencies. Every block is its own
 `contenteditable`; the browser handles typing, and React only mounts block hosts, so typing,
 selecting and formatting cost zero React renders.
@@ -12,6 +14,8 @@ and the high-level design (HLD). `node scripts/check.js` enforces those budgets;
 ```sh
 npm i verbal-editor react react-dom
 ```
+
+Runnable starters: [`examples/react`](examples/react) (Vite) and [`examples/next`](examples/next) (Next.js, rendered in the browser only). Open either on StackBlitz: [React](https://stackblitz.com/github/codebyNJ/verbal-editor/tree/main/examples/react?file=src/App.jsx) · [Next.js](https://stackblitz.com/github/codebyNJ/verbal-editor/tree/main/examples/next?file=app/Editor.jsx).
 
 React is an optional peer, needed only by the `<Blocks>` binding; `verbal-editor/dom` renders the
 same editor with no framework (`mount(editor, element)`). Joi is an optional peer too, needed only

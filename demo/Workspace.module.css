@@ -93,7 +93,6 @@
 .row a[aria-current] svg { color: var(--v-accent); }
 .elsewhere { display: flex; flex-direction: column; gap: 1px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--v-border); }
 .elsewhere > * { padding-left: 30px; }
-.elsewhere small { color: var(--v-fg-faint); }
 
 .scrim { display: none; }
 .main { display: flex; flex-direction: column; min-width: 0; height: 100dvh; }

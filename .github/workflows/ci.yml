@@ -38,6 +38,7 @@ jobs:
           registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm run build
+      # Trusted publishing (OIDC): no stored token. Needs npm 11.5+ and this workflow set as the package's
+      # trusted publisher on npmjs.com.
+      - run: npm install -g npm@latest
       - run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

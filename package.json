@@ -4,7 +4,10 @@
   "description": "Notion-style block editor with zero runtime dependencies and zero React re-renders while typing.",
   "type": "module",
   "license": "MIT",
-  "homepage": "https://verbal-editor.vercel.app",
+  "homepage": "https://verbal-editor.nijeeshnj.tech",
+  "repository": { "type": "git", "url": "git+https://github.com/codebyNJ/verbal-editor.git" },
+  "bugs": "https://github.com/codebyNJ/verbal-editor/issues",
+  "keywords": ["editor", "rich-text-editor", "block-editor", "wysiwyg", "contenteditable", "notion", "react", "markdown", "mathml", "zero-dependency", "lightweight"],
   "exports": {
     ".": { "types": "./dist/types/index.d.ts", "default": "./dist/index.js" },
     "./preset": { "types": "./dist/types/preset.d.ts", "default": "./dist/preset.js" },

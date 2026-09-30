@@ -107,7 +107,8 @@ test('landing: every link and image resolves', async ({ page, request }) => {
   expect(hrefs.length).toBeGreaterThan(20);
   const origin = new URL(page.url()).origin;
   for (const href of hrefs.filter((h) => !h.startsWith('#'))) {
-    const res = await request.get(new URL(href, `${origin}/`).href);
+    // npmjs.com answers scripts with a bot check, so a package link is checked against the registry instead.
+    const res = await request.get(new URL(href, `${origin}/`).href.replace(/^https:\/\/www\.npmjs\.com\/package\//, 'https://registry.npmjs.org/'));
     expect(res.ok(), href).toBe(true);
     expect((await res.text()).length, href).toBeGreaterThan(100);
   }
